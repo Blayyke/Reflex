@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '2.0.1'
+    id 'idea'
+}
+
+group = 'me.blayyke'
+version = '1.0'
+mainClassName = group + '.reflex.Reflex'
+sourceCompatibility = 1.8
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile group: 'net.dv8tion', name: 'JDA', version: '3.5.0_331'
+    compile group: 'org.reflections', name: 'reflections', version: '0.9.11'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    compile group: 'biz.paluch.redis', name: 'lettuce', version: '5.0.0.Beta1'
+}
+
+compileJava.options.encoding = 'UTF-8'
