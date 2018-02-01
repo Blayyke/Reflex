@@ -20,6 +20,21 @@ public class MessageListener extends ListenerAdapter {
         String cmdPrefix = reflex.getPrefix(event.getGuild());
         String content = event.getMessage().getContentRaw().replaceAll(" +", " ");
 
+        if (content == null) {
+            reflex.getLogger().debug("Received null-content for message " + event.getMessageId());
+            return;
+        }
+
+        String selfId = reflex.getShardManager().getShards().get(0).getSelfUser().getId();
+        if (content.equalsIgnoreCase("<@" + selfId + ">") || content.equals("<@!" + selfId + ">")) {
+            content = event.getGuild().getSelfMember().getAsMention() + " help";
+        }
+
+        if (cmdPrefix == null) {
+            reflex.getLogger().warn("Prefix is null in guild " + event.getGuild().getIdLong() + "!");
+            return;
+        }
+
         if (!content.toLowerCase().startsWith(cmdPrefix)) {
             if (!content.startsWith(event.getGuild().getSelfMember().getAsMention() + " ")) return;
             cmdPrefix = event.getGuild().getSelfMember().getAsMention() + " ";
