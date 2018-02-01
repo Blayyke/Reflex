@@ -1,5 +1,6 @@
 package me.blayyke.reflex.listeners;
 
+import com.lambdaworks.redis.api.sync.RedisCommands;
 import me.blayyke.reflex.Reflex;
 import me.blayyke.reflex.database.DBEntryKey;
 import me.blayyke.reflex.utils.DatabaseUtils;
@@ -24,16 +25,17 @@ public class BotListener extends ListenerAdapter {
 
         for (Guild guild : event.getJDA().getGuilds()) {
             // String
-            if (!DatabaseUtils.exists(guild, reflex.getDBManager().getSync(), DBEntryKey.GUILD_PREFIX))
-                DatabaseUtils.setString(guild, reflex.getDBManager().getSync(), DBEntryKey.GUILD_PREFIX, reflex.getSettings().getDefaultPrefix());
-            if (!DatabaseUtils.exists(guild, reflex.getDBManager().getSync(), DBEntryKey.JOIN_MESSAGE))
-                DatabaseUtils.setString(guild, reflex.getDBManager().getSync(), DBEntryKey.JOIN_MESSAGE, null);
-            if (!DatabaseUtils.exists(guild, reflex.getDBManager().getSync(), DBEntryKey.LEAVE_MESSAGE))
-                DatabaseUtils.setString(guild, reflex.getDBManager().getSync(), DBEntryKey.LEAVE_MESSAGE, null);
+            RedisCommands<String, String> sync = reflex.getDBManager().getSync();
+            if (!DatabaseUtils.exists(guild, sync, DBEntryKey.GUILD_PREFIX))
+                DatabaseUtils.setString(guild, sync, DBEntryKey.GUILD_PREFIX, reflex.getSettings().getDefaultPrefix());
+            if (!DatabaseUtils.exists(guild, sync, DBEntryKey.JOIN_MESSAGE))
+                DatabaseUtils.setString(guild, sync, DBEntryKey.JOIN_MESSAGE, null);
+            if (!DatabaseUtils.exists(guild, sync, DBEntryKey.LEAVE_MESSAGE))
+                DatabaseUtils.setString(guild, sync, DBEntryKey.LEAVE_MESSAGE, null);
 
             // Number
-            if (!DatabaseUtils.exists(guild, reflex.getDBManager().getSync(), DBEntryKey.ANNOUNCEMENT_CHANNEL))
-                DatabaseUtils.setNumber(guild, reflex.getDBManager().getSync(), DBEntryKey.ANNOUNCEMENT_CHANNEL, -1);
+            if (!DatabaseUtils.exists(guild, sync, DBEntryKey.ANNOUNCEMENT_CHANNEL))
+                DatabaseUtils.setNumber(guild, sync, DBEntryKey.ANNOUNCEMENT_CHANNEL, -1);
 
             reflex.getLogger().info("Setup guild {} ({})", guild.getName(), guild.getId());
         }
