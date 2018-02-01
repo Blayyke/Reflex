@@ -1,5 +1,6 @@
 package me.blayyke.reflex.listeners;
 
+import com.lambdaworks.redis.api.sync.RedisCommands;
 import me.blayyke.reflex.Reflex;
 import me.blayyke.reflex.database.DBEntryKey;
 import me.blayyke.reflex.utils.DatabaseUtils;
@@ -29,8 +30,10 @@ public class JoinLeaveListener extends ListenerAdapter {
     }
 
     private void sendJoinLeaveMessage(Guild guild, Member member, boolean join) {
-        String message = DatabaseUtils.getString(guild, reflex.getDBManager().getSync(), join ? DBEntryKey.JOIN_MESSAGE : DBEntryKey.LEAVE_MESSAGE);
-        long channelId = DatabaseUtils.getNumber(guild, reflex.getDBManager().getSync(), DBEntryKey.ANNOUNCEMENT_CHANNEL);
+        RedisCommands<String, String> sync = reflex.getDBManager().getSync();
+
+        String message = DatabaseUtils.getString(guild, sync, join ? DBEntryKey.JOIN_MESSAGE : DBEntryKey.LEAVE_MESSAGE);
+        long channelId = DatabaseUtils.getNumber(guild, sync, DBEntryKey.ANNOUNCEMENT_CHANNEL);
 
         if (message == null || message.isEmpty()) return;
         TextChannel channel = guild.getTextChannelById(channelId);
