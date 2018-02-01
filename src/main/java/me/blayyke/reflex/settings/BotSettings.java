@@ -45,7 +45,7 @@ public class BotSettings {
 
         this.defaultPrefix = readFromJson(data, "default_prefix", "r!");
         this.token = readFromJson(data, "token", "");
-        this.gameName = readFromJson(data, "game", "Hello world!");
+        this.gameName = readFromJson(data, "game", "Mention me for help!");
         this.totalShardCount = readFromJson(data, "total_shards", 1);
 
         JSONObject dbSettings = readFromJson(data, "db_settings", new JSONObject()
