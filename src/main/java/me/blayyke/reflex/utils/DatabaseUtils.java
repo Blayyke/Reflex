@@ -33,6 +33,7 @@ public class DatabaseUtils {
         sync.set(formatKey(guild, key), String.valueOf(value));
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean exists(Guild guild, RedisCommands<String, String> sync, DBEntryKey key) {
         return sync.exists(formatKey(guild, key)) >= 1;
     }
@@ -43,5 +44,12 @@ public class DatabaseUtils {
 
     public static Logger getLogger() {
         return logger;
+    }
+
+    public static void remove(Guild guild, RedisCommands<String, String> sync, DBEntryKey... keys) {
+        String[] strKeys = new String[keys.length];
+        for (int i = 0; i < keys.length; i++) strKeys[i] = formatKey(guild, keys[i]);
+
+        sync.del(strKeys);
     }
 }
