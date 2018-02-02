@@ -22,11 +22,15 @@ public class GuildListener extends ListenerAdapter {
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
         sendGuildMessage(event.getGuild(), true);
+
+        reflex.getDBManager().loadGuild(event.getGuild());
     }
 
     @Override
     public void onGuildLeave(GuildLeaveEvent event) {
         sendGuildMessage(event.getGuild(), false);
+
+        reflex.getDBManager().purgeGuild(event.getGuild());
     }
 
     private void sendGuildMessage(Guild guild, boolean join) {

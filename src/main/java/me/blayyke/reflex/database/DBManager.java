@@ -7,23 +7,24 @@ import com.lambdaworks.redis.api.sync.RedisCommands;
 import me.blayyke.reflex.Reflex;
 import me.blayyke.reflex.settings.DBSettings;
 import me.blayyke.reflex.utils.DatabaseUtils;
+import net.dv8tion.jda.core.entities.Guild;
 
 public class DBManager {
-    private final Reflex bot;
+    private final Reflex reflex;
     private boolean initialized = false;
     private RedisClient redisClient;
     private StatefulRedisConnection<String, String> connection;
     private RedisCommands<String, String> sync;
 
     public DBManager(Reflex bot) {
-        this.bot = bot;
+        this.reflex = bot;
     }
 
     public void init() {
         if (initialized)
             throw new IllegalStateException("Tried to initialize DBManager but it was already initialized!");
 
-        DBSettings dbSettings = bot.getSettings().getDatabaseSettings();
+        DBSettings dbSettings = reflex.getSettings().getDatabaseSettings();
 
         RedisURI.Builder builder = RedisURI.builder()
                 .withDatabase(dbSettings.getDatabaseNumber())
@@ -50,5 +51,28 @@ public class DBManager {
 
     public RedisCommands<String, String> getSync() {
         return sync;
+    }
+
+    public void loadGuild(Guild guild) {
+        // String
+        RedisCommands<String, String> sync = reflex.getDBManager().getSync();
+        if (!DatabaseUtils.exists(guild, sync, DBEntryKey.GUILD_PREFIX))
+            DatabaseUtils.setString(guild, sync, DBEntryKey.GUILD_PREFIX, reflex.getSettings().getDefaultPrefix());
+        if (!DatabaseUtils.exists(guild, sync, DBEntryKey.JOIN_MESSAGE))
+            DatabaseUtils.setString(guild, sync, DBEntryKey.JOIN_MESSAGE, null);
+        if (!DatabaseUtils.exists(guild, sync, DBEntryKey.LEAVE_MESSAGE))
+            DatabaseUtils.setString(guild, sync, DBEntryKey.LEAVE_MESSAGE, null);
+
+        // Number
+        if (!DatabaseUtils.exists(guild, sync, DBEntryKey.ANNOUNCEMENT_CHANNEL))
+            DatabaseUtils.setNumber(guild, sync, DBEntryKey.ANNOUNCEMENT_CHANNEL, -1);
+
+        reflex.getLogger().info("Setup guild {} ({})", guild.getName(), guild.getId());
+    }
+
+    public void purgeGuild(Guild guild) {
+        RedisCommands<String, String> sync = reflex.getDBManager().getSync();
+        DatabaseUtils.remove(guild, sync, DBEntryKey.GUILD_PREFIX, DBEntryKey.JOIN_MESSAGE, DBEntryKey.LEAVE_MESSAGE, DBEntryKey.ANNOUNCEMENT_CHANNEL);
+        reflex.getLogger().info("Removed guild {} ({}) from database.", guild.getName(), guild.getId());
     }
 }
