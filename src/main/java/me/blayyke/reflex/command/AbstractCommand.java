@@ -29,6 +29,10 @@ public abstract class AbstractCommand {
 
     public abstract CommandCategory getCategory();
 
+    public Permission[] getBotRequiredPermissions() {
+        return new Permission[0];
+    }
+
     public abstract String getName();
 
     public abstract String getDesc();

@@ -93,6 +93,16 @@ public class CommandManager {
                     .addField("Required permissions", MiscUtils.arrayToString(permArr, ", "), false).build()).queue();
             return;
         }
+        if (!event.getGuild().getSelfMember().hasPermission(command.getBotRequiredPermissions())) {
+            String[] permArr = new String[command.getBotRequiredPermissions().length];
+
+            for (int i = 0; i < command.getBotRequiredPermissions().length; i++)
+                permArr[i] = command.getBotRequiredPermissions()[i].getName();
+
+            event.getChannel().sendMessage(AbstractCommand.createEmbed(Colours.WARN).setTitle("Failure!").setDescription("I do not have the required permissions to execute this command.")
+                    .addField("Required permissions", MiscUtils.arrayToString(permArr, ", "), false).build()).queue();
+            return;
+        }
         if (command.getCategory() == CommandCategory.CUSTOMIZATION && !event.getMember().hasPermission(Permission.MANAGE_SERVER)) {
             event.getChannel().sendMessage(AbstractCommand.createEmbed(Colours.WARN).setTitle("Failure!").setDescription("You do not have the required permissions to execute this command.")
                     .addField("Required permissions", Permission.MANAGE_SERVER.getName(), false).build()).queue();
