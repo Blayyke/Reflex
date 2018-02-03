@@ -5,7 +5,8 @@ public enum CommandCategory {
     DEVELOPER("Developer", "Commands that can only be used for the bot's developer"),
     UTILITIES("Other", "Commands that don't fit into the other categories"),
     CUSTOMIZATION("Customization", "Commands that change things about the bot for your guild. These commands require the Manage Server permission"),
-    CUSTOM("Custom Commands", "Commands that are unique to this guild");
+    CUSTOM("Custom Commands", "Commands that are unique to this guild"),
+    FUN("Fun", "Commands that are just for fun");
 
     private String name;
     private String description;
