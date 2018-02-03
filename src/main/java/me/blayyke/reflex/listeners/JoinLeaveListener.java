@@ -7,6 +7,7 @@ import me.blayyke.reflex.utils.DatabaseUtils;
 import me.blayyke.reflex.utils.MiscUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberLeaveEvent;
@@ -31,6 +32,13 @@ public class JoinLeaveListener extends ListenerAdapter {
 
     private void sendJoinLeaveMessage(Guild guild, Member member, boolean join) {
         RedisCommands<String, String> sync = reflex.getDBManager().getSync();
+
+        long autoRoleId = DatabaseUtils.getNumber(guild, sync, DBEntryKey.AUTOROLE_ID);
+        if (autoRoleId != -1) {
+            Role role = reflex.getShardManager().getRoleById(autoRoleId);
+            if ((role) != null)
+                guild.getController().addRolesToMember(member, role).reason("Auto-role application.").queue();
+        }
 
         String message = DatabaseUtils.getString(guild, sync, join ? DBEntryKey.JOIN_MESSAGE : DBEntryKey.LEAVE_MESSAGE);
         long channelId = DatabaseUtils.getNumber(guild, sync, DBEntryKey.ANNOUNCEMENT_CHANNEL);

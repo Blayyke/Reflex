@@ -4,7 +4,8 @@ public enum DBEntryKey {
     LEAVE_MESSAGE("leave_message", true, false, false),
     JOIN_MESSAGE("join_message", true, false, false),
     GUILD_PREFIX("prefix", true, false, false),
-    ANNOUNCEMENT_CHANNEL("announcement_channel", false, false, true);
+    ANNOUNCEMENT_CHANNEL("announcement_channel", false, false, true),
+    AUTOROLE_ID("autorole_id", false, false, true);
 
     private final String redisKey;
     private final boolean isString;

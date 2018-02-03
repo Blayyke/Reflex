@@ -66,6 +66,8 @@ public class DBManager {
         // Number
         if (!DatabaseUtils.exists(guild, sync, DBEntryKey.ANNOUNCEMENT_CHANNEL))
             DatabaseUtils.setNumber(guild, sync, DBEntryKey.ANNOUNCEMENT_CHANNEL, -1);
+        if (!DatabaseUtils.exists(guild, sync, DBEntryKey.AUTOROLE_ID))
+            DatabaseUtils.setNumber(guild, sync, DBEntryKey.AUTOROLE_ID, -1);
 
         reflex.getLogger().info("Setup guild {} ({})", guild.getName(), guild.getId());
     }
