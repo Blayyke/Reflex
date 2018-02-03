@@ -51,6 +51,9 @@ public class CommandManager {
     }
 
     private void loadCommand(AbstractCommand command) {
+        if (commandMap.containsKey(command.getName()) || aliasMap.containsKey(command.getName()))
+            throw new IllegalStateException("A command is already registered with the name or alias \'" + command.getName() + "\'");
+
         commandMap.put(command.getName().toLowerCase(), command);
 
         for (String alias : command.getAliases()) aliasMap.put(alias.toLowerCase(), command);
