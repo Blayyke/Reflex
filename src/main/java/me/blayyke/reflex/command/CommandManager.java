@@ -30,9 +30,7 @@ public class CommandManager {
         String packageToLookIn = getClass().getPackage().getName() + ".commands";
         Reflections reflections = new Reflections(packageToLookIn);
         reflections.getSubTypesOf(AbstractCommand.class).forEach(c -> {
-            if (!c.getPackage().getName().startsWith(packageToLookIn))
-                System.out.println(c.getName() + " was found outside package to look in. Reflections is fucky man");
-            else
+            if (c.getPackage().getName().startsWith(packageToLookIn))
                 loadCommandFromClass(c);
         });
 
