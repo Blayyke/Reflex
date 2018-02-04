@@ -13,25 +13,15 @@ public class CustomCommand extends AbstractCommand {
     private String name;
     private String desc;
 
-    public CustomCommand(String name, String desc, Guild guild, String string) {
-        if (guild == null || desc == null || string == null) {
-            System.out.println("invalid params!");
-            return;
-        }
+    public CustomCommand(Guild guild, String name) {
+        if (guild == null || name == null || name.isEmpty()) throw new IllegalArgumentException("invalid arguments");
         this.guild = guild;
-        this.code = string;
         this.name = name;
-        this.desc = desc;
-        System.out.println("Command passed!");
     }
 
     @Override
     public CommandCategory getCategory() {
         return CommandCategory.CUSTOM;
-    }
-
-    CustomCommand(Guild guild, String code) {
-        this.code = code;
     }
 
     private String getCommandCode() {
@@ -62,5 +52,17 @@ public class CustomCommand extends AbstractCommand {
 
     public Guild getGuild() {
         return guild;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
