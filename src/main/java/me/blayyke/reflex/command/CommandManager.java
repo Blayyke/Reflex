@@ -19,6 +19,7 @@ public class CommandManager {
     private HashMap<String, AbstractCommand> commandMap = new HashMap<>();
     private HashMap<String, AbstractCommand> aliasMap = new HashMap<>();
     private int commandFailures = 0;
+    private int commandsExecuted = 0;
 
     public CommandManager(Reflex reflex) {
         this.reflex = reflex;
@@ -123,10 +124,15 @@ public class CommandManager {
             failure = true;
         }
 
+        commandsExecuted++;
         logger.info("[Execution{}] {} {} {}. Execution took {}ms", failure ? " - FAILURE" : "", UserUtils.formatUser(event.getAuthor()), command.getName(), Arrays.toString(args), (Math.round(((double) (System.nanoTime() - startTime)) / 1000) / 100) / 10.0);
     }
 
     public void init() {
         loadCommands();
+    }
+
+    public int getCommandsExecuted() {
+        return commandsExecuted;
     }
 }
