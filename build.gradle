@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'me.blayyke'
-version = '1.0'
+version = project.file("\\src\\main\\resources\\version.txt").text.trim()
 mainClassName = group + '.reflex.Reflex'
 sourceCompatibility = 1.8
 
