@@ -108,7 +108,7 @@ public class CommandManager {
         }
 
         if (command.getCategory() == CommandCategory.DEVELOPER && event.getAuthor().getIdLong() != reflex.getDeveloperId()) {
-            event.getChannel().sendMessage(AbstractCommand.createEmbed(Colours.ERROR).setDescription("Only the developer can use this!").setTitle("Failure!").build()).queue();
+            logger.info("{} was silently denied access to command {}.", UserUtils.formatUser(event.getAuthor()), command.getName());
             return;
         }
 
