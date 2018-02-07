@@ -18,7 +18,6 @@ public class BotListener extends ListenerAdapter {
         reflex.getLogger().info("Shard {} ready.", event.getJDA().getShardInfo().getShardString());
         reflex.setDeveloperId(event.getJDA().asBot().getApplicationInfo().complete().getOwner().getIdLong());
         event.getJDA().getPresence().setPresence(OnlineStatus.ONLINE, Game.playing(reflex.getSettings().getGameName()));
-
         event.getJDA().getGuilds().forEach(reflex.getDBManager()::loadGuild);
     }
 }
