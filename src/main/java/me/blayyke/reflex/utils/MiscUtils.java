@@ -20,6 +20,10 @@ public class MiscUtils {
         return builder.toString();
     }
 
+    public static boolean isAllLetters(CharSequence charSequence) {
+        return charSequence.chars().allMatch(Character::isLetter);
+    }
+
     public static String arrayToString(String[] args, String separator) {
         return arrayToString(args, 0, separator);
     }
