@@ -2,6 +2,7 @@ package me.blayyke.reflex.database;
 
 public enum DBEntryKeyCCmd {
     ACTION("action"),
+    CREATOR("creator"),
     DESCRIPTION("desc");
 
     private String key;
