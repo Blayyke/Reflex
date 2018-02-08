@@ -69,6 +69,7 @@ public class DBManager {
         if (!DatabaseUtils.exists(guild, sync, DBEntryKey.AUTOROLE_ID))
             DatabaseUtils.setNumber(guild, sync, DBEntryKey.AUTOROLE_ID, -1);
 
+        reflex.getCustomCommandManager().loadCommands(guild);
         reflex.getLogger().info("Setup guild {} ({})", guild.getName(), guild.getId());
     }
 
