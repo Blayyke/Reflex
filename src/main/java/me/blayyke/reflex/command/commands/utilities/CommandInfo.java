@@ -38,7 +38,12 @@ public class CommandInfo extends AbstractCommand {
         embedBuilder.addField("Messages received", String.valueOf(getReflex().getMessageListener().getMessagesReceived()), true);
 
         embedBuilder.addField("My Version", Version.getVersion(), true);
+        embedBuilder.addBlankField(true);
         embedBuilder.addField("Guilds", String.valueOf(getReflex().getShardManager().getGuilds().size()), true);
+
+        embedBuilder.addField("Text Channels", String.valueOf(getReflex().getShardManager().getTextChannels().size()), true);
+        embedBuilder.addField("Voice Channels", String.valueOf(getReflex().getShardManager().getVoiceChannels().size()), true);
+        embedBuilder.addField("Channel Categories", String.valueOf(getReflex().getShardManager().getCategories().size()), true);
 
         context.getChannel().sendMessage(embedBuilder.build()).queue();
     }
