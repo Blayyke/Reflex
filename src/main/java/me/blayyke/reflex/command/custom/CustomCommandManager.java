@@ -1,9 +1,13 @@
 package me.blayyke.reflex.command.custom;
 
+import com.lambdaworks.redis.api.sync.RedisCommands;
 import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.Reflex;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.database.DBEntryKey;
+import me.blayyke.reflex.database.DBEntryKeyCCmd;
+import me.blayyke.reflex.utils.DatabaseUtils;
 import me.blayyke.reflex.utils.MiscUtils;
 import me.blayyke.reflex.utils.UserUtils;
 import net.dv8tion.jda.core.entities.Guild;
@@ -16,53 +20,73 @@ import javax.script.ScriptEngineManager;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class CustomCommandManager {
     private final Reflex reflex;
     private Logger logger = LoggerFactory.getLogger(Reflex.class.getSimpleName() + "-CustomCommandManager");
-    private HashMap<Long, HashMap<String, CustomCommand>> commandMap = new HashMap<>();
+    private HashMap<Long, HashMap<String, CustomCommand>> guildCommandsMap = new HashMap<>();
     private int commandFailures = 0;
     private ScriptEngine executionEngine;
+    private int commandsExecuted = 0;
 
     public CustomCommandManager(Reflex reflex) {
         this.reflex = reflex;
         executionEngine = new ScriptEngineManager().getEngineByName("nashorn");
     }
 
-    private void loadCommands() {
-        logger.info("Loading commands...");
-        logger.info("Commands loaded!");
+    public void loadCommands(Guild guild) {
+        RedisCommands<String, String> sync = reflex.getDBManager().getSync();
+        guildCommandsMap.put(guild.getIdLong(), new HashMap<>());
+        Set<String> stringSet = DatabaseUtils.getStringSet(guild, sync, DBEntryKey.COMMANDS);
+
+        if (stringSet.isEmpty()) {
+            logger.info("Guild {} has no custom commands to load.", guild.getName());
+            return;
+        }
+
+        for (String name : stringSet) {
+            if (name == null) throw new RuntimeException("Command name is null!");
+
+            String desc = DatabaseUtils.getHashString(guild, sync, DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + name, DBEntryKeyCCmd.DESCRIPTION);
+            String action = DatabaseUtils.getHashString(guild, sync, DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + name, DBEntryKeyCCmd.ACTION);
+            long creatorId = DatabaseUtils.getHashNumber(guild, sync, DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + name, DBEntryKeyCCmd.CREATOR);
+
+            if (action == null)
+                action = "channel.sendMessage(\"The action for this command has not been configured. Please contact an administrator.\");";
+
+            CustomCommand command = new CustomCommand(reflex, guild, name);
+            command.setReflex(reflex);
+            command.setDesc(desc);
+            command.setCreatorId(creatorId);
+            command.setAction(action);
+            loadCommand(command);
+        }
+
+        logger.info("Loaded commands for guild {}.", guild.getName());
     }
 
-    private void loadCommand(Guild guild, String name, String desc, String commandCode) {
-        CustomCommand command = new CustomCommand(guild, commandCode) {
-            @Override
-            public String getName() {
-                return name;
-            }
-
-            @Override
-            public String getDesc() {
-                return desc;
-            }
-        };
-        command.setReflex(reflex);
-
+    public void createCommand(CustomCommand command) {
+        if (command == null)
+            throw new NullPointerException();
+        DatabaseUtils.addToSet(command.getGuild(), reflex.getDBManager().getSync(), DBEntryKey.COMMANDS, command.getName().toLowerCase());
         loadCommand(command);
     }
 
     private void loadCommand(CustomCommand command) {
-        commandMap.get(command.getGuild().getIdLong()).put(command.getName().toLowerCase(), command);
-        logger.info("Successfully loaded command {}!", command.getName());
+        if (!guildCommandsMap.containsKey(command.getGuild().getIdLong()))
+            guildCommandsMap.put(command.getGuild().getIdLong(), new HashMap<>());
+        getCommandsForGuild(command.getGuild()).put(command.getName().toLowerCase(), command);
+        logger.info("Created/loaded command {} in guild {}.", command.getName(), command.getGuild().getName());
     }
 
-    public HashMap<Long, HashMap<String, CustomCommand>> getCommandMap() {
-        return commandMap;
+    public HashMap<Long, HashMap<String, CustomCommand>> getGuildCommandsMap() {
+        return guildCommandsMap;
     }
 
-    private CustomCommand getCommand(Guild guild, String commandName) {
-        if (!commandMap.containsKey(guild.getIdLong()))
-            commandMap.put(guild.getIdLong(), new HashMap<>());
+    public CustomCommand getCommand(Guild guild, String commandName) {
+        if (!guildCommandsMap.containsKey(guild.getIdLong()))
+            guildCommandsMap.put(guild.getIdLong(), new HashMap<>());
 
         return getCommandsForGuild(guild).get(commandName.toLowerCase());
     }
@@ -94,6 +118,7 @@ public class CustomCommandManager {
             executionEngine.put("guild", new BoxedGuild(context.getGuild()));
             executionEngine.put("channel", new BoxedTextChannel(context.getChannel()));
             executionEngine.put("user", new BoxedUser(context.getMember()));
+            executionEngine.put("input", context.getMessage().getContentRaw().substring((context.getPrefixUsed() + context.getAlias() + " ").length()));
             command.execute(context);
         } catch (Exception e) {
             commandFailures++;
@@ -103,32 +128,32 @@ public class CustomCommandManager {
                     .addField("Reference number", "#" + commandFailures, false).build()).queue();
             failure = true;
         }
-
+        commandsExecuted++;
         logger.info("[Execution{}] {} {} {}. Execution took {}ms", failure ? " - FAILURE" : "", UserUtils.formatUser(context.getMessage().getAuthor()), command.getName(), Arrays.toString(context.getArgs()), (Math.round(((double) (System.nanoTime() - startTime)) / 1000) / 100) / 10.0);
-    }
-
-    public void init() {
-//        loadCommands();
     }
 
     public ScriptEngine getExecutionEngine() {
         return executionEngine;
     }
 
-    public void createCommand(CustomCommand command) {
-        if (command == null) {
-            System.out.println("Bad command!");
-            return;
-        }
-        command.setReflex(reflex);
-
-        if (!commandMap.containsKey(command.getGuild().getIdLong()))
-            commandMap.put(command.getGuild().getIdLong(), new HashMap<>());
-        getCommandsForGuild(command.getGuild()).put(command.getName().toLowerCase(), command);
-        logger.info("Created command " + command.getName() + " in guild " + command.getGuild().getIdLong());
+    private Map<String, CustomCommand> getCommandsForGuild(Guild guild) {
+        return guildCommandsMap.get(guild.getIdLong());
     }
 
-    private Map<String, CustomCommand> getCommandsForGuild(Guild guild) {
-        return commandMap.get(guild.getIdLong());
+    public void deleteCommand(CustomCommand c) {
+        guildCommandsMap.get(c.getGuild().getIdLong()).remove(c.getName().toLowerCase());
+
+        DatabaseUtils.delete(c.getGuild(), reflex.getDBManager().getSync(), DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + c.getName());
+        DatabaseUtils.removeFromSet(c.getGuild(), reflex.getDBManager().getSync(), DBEntryKey.COMMANDS, c.getName().toLowerCase());
+
+        logger.info("Deleted command {} in guild {}.", c.getName(), c.getGuild().getName());
+    }
+
+    public int getCommandsExecuted() {
+        return commandsExecuted;
+    }
+
+    public boolean commandExists(Guild guild, String s) {
+        return guildCommandsMap.get(guild.getIdLong()).containsKey(s.toLowerCase());
     }
 }
