@@ -1,13 +1,12 @@
 package me.blayyke.reflex.database;
 
-public enum CustomCommandDBKey {
-    NAME("name"),
-    ACTION_CODE("action"),
+public enum DBEntryKeyCCmd {
+    ACTION("action"),
     DESCRIPTION("desc");
 
     private String key;
 
-    CustomCommandDBKey(String key) {
+    DBEntryKeyCCmd(String key) {
         this.key = key;
     }
 
