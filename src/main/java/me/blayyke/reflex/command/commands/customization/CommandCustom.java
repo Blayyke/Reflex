@@ -7,11 +7,17 @@ import me.blayyke.reflex.command.CommandContext;
 import me.blayyke.reflex.command.custom.CustomCommand;
 import me.blayyke.reflex.utils.MiscUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.Permission;
 
 public class CommandCustom extends AbstractCommand {
     @Override
     public CommandCategory getCategory() {
-        return CommandCategory.DEVELOPER;
+        return CommandCategory.CUSTOMIZATION;
+    }
+
+    @Override
+    public Permission[] getRequiredPermissions() {
+        return new Permission[]{Permission.MANAGE_SERVER};
     }
 
     @Override
@@ -43,9 +49,16 @@ public class CommandCustom extends AbstractCommand {
                     context.getChannel().sendMessage(embed.build()).queue();
                     return;
                 }
+                if (getReflex().getCommandManager().getCommand(context.getArgs()[1]) != null) {
+                    embed.setTitle("Command already exists");
+                    embed.setDescription("I could not create that command as an inbuilt command already exists with that name. Please rerun this command with a different name.");
+                    context.getChannel().sendMessage(embed.build()).queue();
+                    return;
+                }
 
                 CustomCommand command = new CustomCommand(getReflex(), context.getGuild(), context.getArgs()[1]);
                 command.setAction(null);
+                command.setCreatorId(context.getMember().getUser().getIdLong());
                 getReflex().getCustomCommandManager().createCommand(command);
                 context.getChannel().sendMessage(embed.setTitle("Created command").setDescription("Successfully created command `" + command.getName() + "`.").build()).queue();
                 break;
