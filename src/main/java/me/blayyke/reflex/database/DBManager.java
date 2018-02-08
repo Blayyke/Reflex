@@ -75,7 +75,7 @@ public class DBManager {
 
     public void purgeGuild(Guild guild) {
         RedisCommands<String, String> sync = reflex.getDBManager().getSync();
-        DatabaseUtils.remove(guild, sync, DBEntryKey.GUILD_PREFIX, DBEntryKey.JOIN_MESSAGE, DBEntryKey.LEAVE_MESSAGE, DBEntryKey.ANNOUNCEMENT_CHANNEL);
+        DatabaseUtils.remove(guild, sync, DBEntryKey.values());
         reflex.getLogger().info("Removed guild {} ({}) from database.", guild.getName(), guild.getId());
     }
 }
