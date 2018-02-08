@@ -70,7 +70,7 @@ public class DBManager {
             DatabaseUtils.setNumber(guild, sync, DBEntryKey.AUTOROLE_ID, -1);
 
         reflex.getCustomCommandManager().loadCommands(guild);
-        reflex.getLogger().info("Setup guild {} ({})", guild.getName(), guild.getId());
+        reflex.getLogger().info("Finished setting up guild {} ({})", guild.getName(), guild.getId());
     }
 
     public void purgeGuild(Guild guild) {
