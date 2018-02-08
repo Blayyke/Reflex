@@ -11,6 +11,7 @@ import me.blayyke.reflex.listeners.MessageListener;
 import me.blayyke.reflex.settings.BotSettings;
 import me.blayyke.reflex.utils.DatabaseUtils;
 import me.blayyke.reflex.utils.StackTraceHelper;
+import me.blayyke.reflex.utils.Version;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.OnlineStatus;
@@ -33,6 +34,7 @@ public class Reflex {
     private StackTraceHelper stackTraceHelper = new StackTraceHelper(getClass().getPackage().getName());
     private HttpClient httpClient;
     private CustomCommandManager customCommandManager;
+    private MessageListener messageListener = new MessageListener(this);
 
     public static void main(String[] args) throws LoginException, IOException {
         new Reflex();
@@ -42,6 +44,8 @@ public class Reflex {
         settings = new BotSettings(this);
         settings.load();
 
+        Version.loadVersion();
+
         httpClient = new HttpClient();
 
         dbManager = new DBManager(this);
@@ -50,11 +54,10 @@ public class Reflex {
         commandManager = new CommandManager(this);
         commandManager.init();
         customCommandManager = new CustomCommandManager(this);
-        customCommandManager.init();
 
         DefaultShardManagerBuilder builder = new DefaultShardManagerBuilder();
         builder.setShardsTotal(settings.getTotalShardCount());
-        builder.addEventListeners(new BotListener(this), new JoinLeaveListener(this), new MessageListener(this), new GuildListener(this));
+        builder.addEventListeners(new BotListener(this), new JoinLeaveListener(this), messageListener, new GuildListener(this));
         builder.setGame(Game.playing("Starting up..."));
         builder.setStatus(OnlineStatus.DO_NOT_DISTURB);
         builder.setSessionController(new SessionControllerAdapter());
@@ -121,5 +124,9 @@ public class Reflex {
 
     public CustomCommandManager getCustomCommandManager() {
         return customCommandManager;
+    }
+
+    public MessageListener getMessageListener() {
+        return messageListener;
     }
 }
