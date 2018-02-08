@@ -9,6 +9,7 @@ import me.blayyke.reflex.database.DBEntryKeyCCmd;
 import me.blayyke.reflex.utils.DatabaseUtils;
 import me.blayyke.reflex.utils.MiscUtils;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
 
 import javax.script.ScriptException;
 
@@ -17,6 +18,10 @@ public class CustomCommand extends AbstractCommand {
     private String action = null;
     private String desc = null;
     private String name;
+    private long creatorId;
+
+    private static final String FUNCTION_RANDOM = "function random() {\n\tif(arguments.length===0) return \"\";\nreturn arguments[Math.floor(Math.random() * arguments.length)];\n}";
+    private static final String FUNCTION_RANDOM_NUMBER = "function random_number(maxNum) {\n\treturn Math.floor(Math.random() * maxNum) + 1;\n}";
 
     public CustomCommand(Reflex reflex, Guild guild, String name) {
         if (guild == null || name == null || name.isEmpty()) throw new IllegalArgumentException("invalid arguments");
@@ -35,13 +40,17 @@ public class CustomCommand extends AbstractCommand {
     @Override
     public void execute(CommandContext context) {
         try {
-            getReflex().getCustomCommandManager().getExecutionEngine().eval(
-                    "(function(){"
-                            + getAction()
-                            + "})();");
+            String code = FUNCTION_RANDOM + "\n" + FUNCTION_RANDOM_NUMBER + "\n" + getMainFunction(getAction());
+            getReflex().getCustomCommandManager().getExecutionEngine().eval(code);
         } catch (ScriptException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private String getMainFunction(String action) {
+        return "(function() {\n\t" +
+                getAction() +
+                "\n})();\n";
     }
 
     @Override
@@ -49,18 +58,14 @@ public class CustomCommand extends AbstractCommand {
         return name;
     }
 
-    @Override
-    public String getDesc() {
-        return desc;
-    }
-
-    public Guild getGuild() {
-        return guild;
-    }
-
     public void setAction(String action) {
         this.action = action;
         DatabaseUtils.setHashString(getGuild(), getReflex().getDBManager().getSync(), DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + name, DBEntryKeyCCmd.ACTION, action);
+    }
+
+    public void setCreatorId(long creatorId) {
+        this.creatorId = creatorId;
+        DatabaseUtils.setHashNumber(getGuild(), getReflex().getDBManager().getSync(), DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + name, DBEntryKeyCCmd.CREATOR, creatorId);
     }
 
     public void setDesc(String desc) {
@@ -70,5 +75,18 @@ public class CustomCommand extends AbstractCommand {
 
     private String getAction() {
         return action;
+    }
+
+    public Member getCreator() {
+        return guild.getMemberById(creatorId);
+    }
+
+    @Override
+    public String getDesc() {
+        return desc;
+    }
+
+    public Guild getGuild() {
+        return guild;
     }
 }
