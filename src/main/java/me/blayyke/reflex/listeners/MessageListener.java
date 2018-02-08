@@ -6,6 +6,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 public class MessageListener extends ListenerAdapter {
     private Reflex reflex;
+    private int messagesReceived = 0;
 
     public MessageListener(Reflex reflex) {
         this.reflex = reflex;
@@ -13,6 +14,7 @@ public class MessageListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+        messagesReceived++;
         if (event == null || event.getAuthor().isBot() || event.getAuthor().isFake() || event.isWebhookMessage())
             return;
         if (!event.getChannel().canTalk()) return;
@@ -51,5 +53,9 @@ public class MessageListener extends ListenerAdapter {
         }
 
         reflex.getCommandManager().dispatchCommand(command, args, event, cmdPrefix);
+    }
+
+    public int getMessagesReceived() {
+        return messagesReceived;
     }
 }
