@@ -28,6 +28,13 @@ public class MiscUtils {
         return charSequence.chars().allMatch(Character::isLetter);
     }
 
+    public static String arrayToString(Enum[] args, String separator) {
+        String[] strArgs = new String[args.length];
+        for (int i = 0; i < args.length; i++) strArgs[i] = args[i].name().toLowerCase();
+
+        return arrayToString(strArgs, separator);
+    }
+
     public static String arrayToString(String[] args, String separator) {
         return arrayToString(args, 0, separator);
     }
