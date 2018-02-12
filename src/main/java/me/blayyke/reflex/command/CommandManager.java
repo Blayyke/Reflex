@@ -4,7 +4,6 @@ import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.Reflex;
 import me.blayyke.reflex.utils.MiscUtils;
 import me.blayyke.reflex.utils.UserUtils;
-import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
@@ -82,7 +81,7 @@ public class CommandManager {
         }
         if (!event.getChannel().canTalk()) return;
 
-        if (!event.getMember().hasPermission(command.getRequiredPermissions())) {
+        if (!event.getMember().hasPermission(command.getRequiredPermissions()) && event.getAuthor().getIdLong() != reflex.getDeveloperId()) {
             String[] permArr = new String[command.getRequiredPermissions().length];
 
             for (int i = 0; i < command.getRequiredPermissions().length; i++)
@@ -102,14 +101,13 @@ public class CommandManager {
                     .addField("Required permissions", MiscUtils.arrayToString(permArr, ", "), false).build()).queue();
             return;
         }
-        if (command.getCategory() == CommandCategory.CUSTOMIZATION && !event.getMember().hasPermission(Permission.MANAGE_SERVER)) {
-            event.getChannel().sendMessage(AbstractCommand.createEmbed(Colours.WARN).setTitle("Failure!").setDescription("You do not have the required permissions to execute this command.")
-                    .addField("Required permissions", Permission.MANAGE_SERVER.getName(), false).build()).queue();
-            return;
-        }
 
         if (command.getCategory() == CommandCategory.DEVELOPER && event.getAuthor().getIdLong() != reflex.getDeveloperId()) {
             logger.info("{} was silently denied access to command {}.", UserUtils.formatUser(event.getAuthor()), command.getName());
+            return;
+        }
+        if (command.getCategory() == CommandCategory.NSFW && !event.getChannel().isNSFW()) {
+            event.getChannel().sendMessage(AbstractCommand.createEmbed(Colours.WARN).setTitle("Failure!").setDescription("NSFW commands may not be used outside of NSFW-enabled channels.").build()).queue();
             return;
         }
 
