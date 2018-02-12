@@ -5,9 +5,12 @@ import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
 import me.blayyke.reflex.command.CommandContext;
 import me.blayyke.reflex.command.custom.CustomCommand;
+import me.blayyke.reflex.command.custom.CustomCommandType;
 import me.blayyke.reflex.utils.MiscUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
+
+import java.util.Arrays;
 
 public class CommandCustom extends AbstractCommand {
     @Override
@@ -111,6 +114,36 @@ public class CommandCustom extends AbstractCommand {
                 getReflex().getCustomCommandManager().deleteCommand(c);
                 embed.setTitle("Command deleted");
                 embed.setDescription("Command `" + c.getName() + "` has successfully been deleted.");
+                context.getChannel().sendMessage(embed.build()).queue();
+                break;
+            }
+            case "mode":
+            case "type": {
+                if (context.getArgs().length < 2) {
+                    notEnoughArgs(context);
+                    return;
+                }
+                String s = context.getArgs()[1];
+                CustomCommand c = getReflex().getCustomCommandManager().getCommand(context.getGuild(), s);
+                if (c == null) {
+                    commandNotFound(context);
+                    return;
+                }
+
+                CustomCommandType customCommandType = Arrays.stream(CustomCommandType.values()).filter(type -> type.toString().equalsIgnoreCase(context.getArgs()[2])).findAny().orElse(null);
+
+                if (customCommandType == null) {
+                    embed.setTitle("Invalid type");
+                    embed.setDescription("`" + MiscUtils.escapeFormatting(context.getArgs()[2]) + "` is not a valid custom command type. \nValid types are: " + MiscUtils.arrayToString(CustomCommandType.values(), ", "));
+
+                    context.getChannel().sendMessage(embed.build()).queue();
+                    return;
+                }
+
+                c.setType(customCommandType);
+                embed.setTitle("Command type updated");
+                embed.setDescription("Changed command type of " + c.getName() + " to " + c.getType().toString() + ".");
+
                 context.getChannel().sendMessage(embed.build()).queue();
                 break;
             }

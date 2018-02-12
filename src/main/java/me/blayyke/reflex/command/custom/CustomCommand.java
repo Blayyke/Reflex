@@ -22,6 +22,7 @@ public class CustomCommand extends AbstractCommand {
 
     private static final String FUNCTION_RANDOM = "function random() {\n\tif(arguments.length===0) return \"\";\nreturn arguments[Math.floor(Math.random() * arguments.length)];\n}";
     private static final String FUNCTION_RANDOM_NUMBER = "function random_number(maxNum) {\n\treturn Math.floor(Math.random() * maxNum) + 1;\n}";
+    private CustomCommandType type;
 
     public CustomCommand(Reflex reflex, Guild guild, String name) {
         if (guild == null || name == null || name.isEmpty()) throw new IllegalArgumentException("invalid arguments");
@@ -39,11 +40,22 @@ public class CustomCommand extends AbstractCommand {
 
     @Override
     public void execute(CommandContext context) {
-        try {
-            String code = FUNCTION_RANDOM + "\n" + FUNCTION_RANDOM_NUMBER + "\n" + getMainFunction(getAction());
-            getReflex().getCustomCommandManager().getExecutionEngine().eval(code);
-        } catch (ScriptException e) {
-            throw new RuntimeException(e);
+        if (getAction().isEmpty()) {
+            context.getChannel().sendMessage("Action not set for this command. Please get an admin to set it with " + context.getPrefixUsed() + "custom action " + getName() + " <action>").queue();
+            return;
+        }
+
+        if (type == CustomCommandType.MESSAGE) {
+            context.getChannel().sendMessage(getAction()).queue();
+        } else if (type == CustomCommandType.ADVANCED) {
+            try {
+                String code = FUNCTION_RANDOM + "\n" + FUNCTION_RANDOM_NUMBER + "\n" + getMainFunction(getAction());
+                getReflex().getCustomCommandManager().getExecutionEngine().eval(code);
+            } catch (ScriptException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            context.getChannel().sendMessage("Custom command type not set for this command. Please get an admin to set it with " + context.getPrefixUsed() + "custom type " + getName() + " <type>").queue();
         }
     }
 
@@ -88,5 +100,14 @@ public class CustomCommand extends AbstractCommand {
 
     public Guild getGuild() {
         return guild;
+    }
+
+    public CustomCommandType getType() {
+        return type;
+    }
+
+    public void setType(CustomCommandType type) {
+        this.type = type;
+        DatabaseUtils.setHashString(getGuild(), getReflex().getDBManager().getSync(), DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + name, DBEntryKeyCCmd.TYPE, type.toString().toLowerCase());
     }
 }
