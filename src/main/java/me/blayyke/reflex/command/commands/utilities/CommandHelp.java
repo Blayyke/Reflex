@@ -29,6 +29,8 @@ public class CommandHelp extends AbstractCommand {
     public void execute(CommandContext context) {
         if (!context.hasArgs()) {
             EmbedBuilder embed = createEmbed(Colours.INFO);
+            embed.setDescription("Guild invite: https://discord.gg/h5V3c9s");
+            embed.appendDescription("\nBot Website: https://reflex-bot.github.io");
             embed.setTitle("Bot help");
             embed.setDescription(context.getJDA().getSelfUser().getName() + " is a bot designed to be useful for a range of purposes, with a suite of commands ranging from moderation commands (kick, ban, etc.) commands to random image commands (dogs, cats, ect).");
 
