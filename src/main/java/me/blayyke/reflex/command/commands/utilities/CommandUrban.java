@@ -4,9 +4,8 @@ import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
 import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.utils.AbstractCallback;
 import me.blayyke.reflex.utils.MiscUtils;
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.json.JSONArray;
@@ -39,14 +38,9 @@ public class CommandUrban extends AbstractCommand {
     public void execute(CommandContext context) {
         String query = MiscUtils.arrayToString(context.getArgs(), "+");
         String url = "http://api.urbandictionary.com/v0/define?term=" + query;
-        Callback callback = new Callback() {
+        AbstractCallback callback = new AbstractCallback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                context.getChannel().sendMessage(createEmbed(Colours.WARN).setTitle("Failed").setDescription("Something went wrong when trying to do that. If this issue persists please message the developer").build()).queue();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void response(Response response) throws IOException {
                 ResponseBody body = response.body();
                 if (body == null) {
                     System.out.println("No body");

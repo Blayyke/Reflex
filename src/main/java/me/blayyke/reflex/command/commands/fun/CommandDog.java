@@ -1,14 +1,13 @@
 package me.blayyke.reflex.command.commands.fun;
 
-import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
 import me.blayyke.reflex.command.CommandContext;
-import okhttp3.Call;
-import okhttp3.Callback;
+import me.blayyke.reflex.utils.AbstractCallback;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class CommandDog extends AbstractCommand {
     @Override
@@ -28,16 +27,10 @@ public class CommandDog extends AbstractCommand {
 
     @Override
     public void execute(CommandContext context) {
-        getReflex().getHttpClient().get(new Callback() {
+        getReflex().getHttpClient().get(new AbstractCallback() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                context.getChannel().sendMessage(createEmbed(Colours.ERROR).setTitle("Failure").setDescription("Failed to get your random dog image!").build()).queue();
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                context.getChannel().sendMessage(createEmbed().setTitle("Dog").setImage("https://random.dog/" + response.body().string()).build()).queue();
+            public void response(Response response) throws IOException {
+                context.getChannel().sendMessage(createEmbed().setTitle("Dog").setImage("https://random.dog/" + Objects.requireNonNull(response.body()).string()).build()).queue();
             }
         }, "https://random.dog/woof");
     }
