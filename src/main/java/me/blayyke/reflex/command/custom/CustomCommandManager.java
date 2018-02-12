@@ -118,7 +118,6 @@ public class CustomCommandManager {
             executionEngine.put("guild", new BoxedGuild(context.getGuild()));
             executionEngine.put("channel", new BoxedTextChannel(context.getChannel()));
             executionEngine.put("user", new BoxedUser(context.getMember()));
-            executionEngine.put("input", context.getMessage().getContentRaw().substring((context.getPrefixUsed() + context.getAlias() + " ").length()));
             command.execute(context);
         } catch (Exception e) {
             commandFailures++;
