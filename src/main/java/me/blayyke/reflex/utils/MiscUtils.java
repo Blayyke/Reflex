@@ -3,9 +3,13 @@ package me.blayyke.reflex.utils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.User;
 
+import java.util.Random;
+
 import static me.blayyke.reflex.utils.ParseUtils.LONG_PATTERN;
 
 public class MiscUtils {
+    private static Random random = new Random();
+
     public static String arrayToString(String[] args, int startIndex, String separator) {
         StringBuilder builder = new StringBuilder();
         if (args.length == 0) return "";
@@ -59,5 +63,9 @@ public class MiscUtils {
                 .replace("%guild.name", guild.getName())
                 .replace("%server.id", guild.getId())
                 .replace("%guild.id", guild.getId());
+    }
+
+    public static int getRandom(int i) {
+        return random.nextInt(i);
     }
 }
