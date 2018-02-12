@@ -22,15 +22,15 @@ public class JoinLeaveListener extends ListenerAdapter {
 
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent event) {
-        sendJoinLeaveMessage(event.getGuild(), event.getMember(), true);
+        onJoinLeave(event.getGuild(), event.getMember(), true);
     }
 
     @Override
     public void onGuildMemberLeave(GuildMemberLeaveEvent event) {
-        sendJoinLeaveMessage(event.getGuild(), event.getMember(), false);
+        onJoinLeave(event.getGuild(), event.getMember(), false);
     }
 
-    private void sendJoinLeaveMessage(Guild guild, Member member, boolean join) {
+    private void onJoinLeave(Guild guild, Member member, boolean join) {
         RedisCommands<String, String> sync = reflex.getDBManager().getSync();
 
         long autoRoleId = DatabaseUtils.getNumber(guild, sync, DBEntryKey.AUTOROLE_ID);
