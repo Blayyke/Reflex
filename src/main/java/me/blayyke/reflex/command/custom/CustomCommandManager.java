@@ -51,7 +51,8 @@ public class CustomCommandManager {
             String desc = DatabaseUtils.getHashString(guild, sync, DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + name, DBEntryKeyCCmd.DESCRIPTION);
             String action = DatabaseUtils.getHashString(guild, sync, DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + name, DBEntryKeyCCmd.ACTION);
             long creatorId = DatabaseUtils.getHashNumber(guild, sync, DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + name, DBEntryKeyCCmd.CREATOR);
-            CustomCommandType type = CustomCommandType.valueOf(DatabaseUtils.getHashString(guild, sync, DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + name, DBEntryKeyCCmd.TYPE).toUpperCase());
+            String typeStr = DatabaseUtils.getHashString(guild, sync, DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + name, DBEntryKeyCCmd.TYPE).toUpperCase();
+            CustomCommandType type = typeStr.isEmpty() ? null : CustomCommandType.valueOf(typeStr);
 
             if (action == null)
                 action = "channel.sendMessage(\"The action for this command has not been configured. Please contact an administrator.\");";
