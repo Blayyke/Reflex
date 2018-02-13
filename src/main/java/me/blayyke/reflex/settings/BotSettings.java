@@ -14,6 +14,10 @@ public class BotSettings {
     private String token;
     private String defaultPrefix;
     private String gameName;
+
+    private String dpwAuth;
+    private String dboAuth;
+
     private int totalShardCount;
     private DBSettings databaseSettings;
 
@@ -47,6 +51,8 @@ public class BotSettings {
         this.token = readFromJson(data, "token", "");
         this.gameName = readFromJson(data, "game", "Mention me for help!");
         this.totalShardCount = readFromJson(data, "total_shards", 1);
+        this.dboAuth = readFromJson(data, "dbo_auth", "");
+        this.dpwAuth = readFromJson(data, "dpw_auth", "");
 
         JSONObject dbSettings = readFromJson(data, "db_settings", new JSONObject()
                 .put("port", 6379)
@@ -77,6 +83,14 @@ public class BotSettings {
 
     public String getGameName() {
         return gameName;
+    }
+
+    public String getDboAuth() {
+        return dboAuth;
+    }
+
+    public String getDpwAuth() {
+        return dpwAuth;
     }
 
     public DBSettings getDatabaseSettings() {

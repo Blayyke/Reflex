@@ -19,5 +19,7 @@ public class BotListener extends ListenerAdapter {
         reflex.setDeveloperId(event.getJDA().asBot().getApplicationInfo().complete().getOwner().getIdLong());
         event.getJDA().getPresence().setPresence(OnlineStatus.ONLINE, Game.playing(reflex.getSettings().getGameName()));
         event.getJDA().getGuilds().forEach(reflex.getDBManager()::loadGuild);
+
+        reflex.getStatsPoster().updateAllStats(event.getJDA());
     }
 }

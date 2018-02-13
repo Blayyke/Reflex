@@ -35,6 +35,7 @@ public class Reflex {
     private HttpClient httpClient;
     private CustomCommandManager customCommandManager;
     private MessageListener messageListener = new MessageListener(this);
+    private BotStatsPoster statsPoster;
 
     public static void main(String[] args) throws LoginException, IOException {
         new Reflex();
@@ -54,6 +55,8 @@ public class Reflex {
         commandManager = new CommandManager(this);
         commandManager.init();
         customCommandManager = new CustomCommandManager(this);
+
+        statsPoster = new BotStatsPoster(this);
 
         DefaultShardManagerBuilder builder = new DefaultShardManagerBuilder();
         builder.setShardsTotal(settings.getTotalShardCount());
@@ -128,5 +131,9 @@ public class Reflex {
 
     public MessageListener getMessageListener() {
         return messageListener;
+    }
+
+    public BotStatsPoster getStatsPoster() {
+        return statsPoster;
     }
 }
