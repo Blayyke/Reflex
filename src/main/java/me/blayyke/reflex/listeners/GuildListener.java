@@ -21,23 +21,25 @@ public class GuildListener extends ListenerAdapter {
 
     @Override
     public void onGuildJoin(GuildJoinEvent event) {
-        sendGuildMessage(event.getGuild(), true);
+        onGuildUpdate(event.getGuild(), true);
 
         reflex.getDBManager().loadGuild(event.getGuild());
     }
 
     @Override
     public void onGuildLeave(GuildLeaveEvent event) {
-        sendGuildMessage(event.getGuild(), false);
+        onGuildUpdate(event.getGuild(), false);
 
         reflex.getDBManager().purgeGuild(event.getGuild());
     }
 
-    private void sendGuildMessage(Guild guild, boolean join) {
+    private void onGuildUpdate(Guild guild, boolean join) {
         if (!guild.getSelfMember().getJoinDate().isAfter(OffsetDateTime.now().minusMinutes(10))) {
             reflex.getLogger().warn("Got a guild join for a guild we joined more than 10 minutes ago! Discord outage?");
             return;
         }
+
+        reflex.getStatsPoster().updateAllStats(guild.getJDA());
 
         EmbedBuilder embed = AbstractCommand.createEmbed();
         embed.setTitle((join ? "Joined" : "Left") + " guild");
