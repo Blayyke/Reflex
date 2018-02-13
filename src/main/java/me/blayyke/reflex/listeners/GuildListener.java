@@ -45,6 +45,10 @@ public class GuildListener extends ListenerAdapter {
         embed.addField("Guild ID", guild.getId(), false);
         embed.addField("Guild Owner", UserUtils.formatUser(guild.getOwner().getUser()), false);
 
+        int bots = (int) guild.getMembers().stream().filter(m -> m.getUser().isBot()).count();
+        int users = guild.getMembers().size() - bots;
+        embed.addField("Members", bots + " bots, " + users + " users.", false);
+
         TextChannel channel = reflex.getShardManager().getTextChannelById(407492928580354058L);
 
         if (!channel.canTalk()) {
