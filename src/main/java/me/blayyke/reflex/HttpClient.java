@@ -27,7 +27,11 @@ public class HttpClient {
         }
     }
 
+    public void post(AbstractCallback callback, String url, JSONObject body, Headers headers) {
+        client.newCall(new Request.Builder().headers(headers).post(RequestBody.create(jsonMediaType, body.toString())).url(url).build()).enqueue(callback);
+    }
+
     public void post(AbstractCallback callback, String url, JSONObject body) {
-        client.newCall(new Request.Builder().post(RequestBody.create(jsonMediaType, body.toString())).url(url).build()).enqueue(callback);
+        post(callback, url, body, new Headers.Builder().build());
     }
 }
