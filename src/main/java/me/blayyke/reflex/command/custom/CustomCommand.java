@@ -46,7 +46,11 @@ public class CustomCommand extends AbstractCommand {
         }
 
         if (type == CustomCommandType.MESSAGE) {
-            context.getChannel().sendMessage(getAction()).queue();
+            String message
+                    = MiscUtils.formatStringGuild(getAction(), context.getGuild());
+            message = MiscUtils.formatStringUser(message, context.getMember().getUser());
+
+            context.getChannel().sendMessage(message).queue();
         } else if (type == CustomCommandType.ADVANCED) {
             try {
                 String code = FUNCTION_RANDOM + "\n" + FUNCTION_RANDOM_NUMBER + "\n" + getMainFunction(getAction());
