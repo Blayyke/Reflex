@@ -15,8 +15,8 @@ public class BotStatsPoster {
     }
 
     public void updateAllStats(JDA shard) {
-        updateStats(shard, "https://bots.discord.pw/api/bots/" + shard.getSelfUser().getId() + "/stats", reflex.getSettings().getDpwAuth());
-        updateStats(shard, "https://discordbots.org/api/bots/" + shard.getSelfUser().getId() + "/stats", reflex.getSettings().getDboAuth());
+        updateStats(shard, "https://bots.discord.pw/api/bots/" + shard.getSelfUser().getId() + "/stats", reflex.getDataManager().getSettings().getDpwAuth());
+        updateStats(shard, "https://discordbots.org/api/bots/" + shard.getSelfUser().getId() + "/stats", reflex.getDataManager().getSettings().getDboAuth());
     }
 
     private void updateStats(JDA shard, String url, String auth) {
