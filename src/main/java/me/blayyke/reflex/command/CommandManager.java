@@ -110,6 +110,11 @@ public class CommandManager {
             event.getChannel().sendMessage(AbstractCommand.createEmbed(Colours.WARN).setTitle("Failure!").setDescription("NSFW commands may not be used outside of NSFW-enabled channels.").build()).queue();
             return;
         }
+        if (command.getCategory() == CommandCategory.NSFW && !MiscUtils.hasVoted(reflex, event.getAuthor())) {
+            event.getChannel().sendMessage(AbstractCommand.createEmbed(Colours.WARN).setTitle("Failure!").setDescription("NSFW commands can only be used once you have voted. " +
+                    "Voting is quick and easy and will only take about 10 seconds, so please vote here:  https://discordbots.org/bot/392277920669761538/vote").build()).queue();
+            return;
+        }
 
         try {
             command.execute(new CommandContext(event.getMessage(), event.getMember(), reflex, event.getJDA(), event.getGuild(), commandName, args, prefixUsed));
