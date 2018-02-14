@@ -1,5 +1,6 @@
 package me.blayyke.reflex.utils;
 
+import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.entities.*;
 
 import java.util.Collections;
@@ -15,6 +16,9 @@ public class ParseUtils {
     public static Pattern CHANNEL_MENTION_PATTERN = Pattern.compile("^<#(\\d{17,21})>$");
     public static Pattern ROLE_MENTION_PATTERN = Pattern.compile("^<@&(\\d{17,21})>$");
 
+    // <: 2-32 DIGITS : 17-21 DIGITS>
+    public static Pattern EMOTE_MENTION_PATTERN = Pattern.compile("^<a?:(.{2,32}):(\\d{17,21})>$");
+
     public static List<TextChannel> getTextChannels(Guild guild, String query) {
         if (query == null) return Collections.emptyList();
 
@@ -27,6 +31,24 @@ public class ParseUtils {
             return Collections.singletonList(guild.getTextChannelById(mentionMatcher.group(1)));
 
         return guild.getTextChannelsByName(query, true);
+    }
+
+    public static List<Emote> getEmotes(ShardManager shardManager, String query) {
+        if (query == null) return Collections.emptyList();
+
+        System.out.println(query);
+
+        Matcher idMatcher = LONG_PATTERN.matcher(query);
+        if (idMatcher.matches() && shardManager.getEmoteById(idMatcher.group(1)) != null)
+            return Collections.singletonList(shardManager.getEmoteById(query));
+
+        Matcher mentionMatcher = EMOTE_MENTION_PATTERN.matcher(query);
+
+        if (mentionMatcher.matches()) {
+            return Collections.singletonList(shardManager.getEmoteById(mentionMatcher.group(2)));
+        }
+
+        return shardManager.getEmotesByName(query, true);
     }
 
     public static List<VoiceChannel> getVoiceChannels(Guild guild, String query) {
