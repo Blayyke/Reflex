@@ -12,11 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 import static me.blayyke.reflex.utils.ParseUtils.LONG_PATTERN;
 
 public class MiscUtils {
     private static Random random = new Random();
+    private static final Pattern DOUBLE_PATTERN = Pattern.compile("^[0-9]+\\.?[0-9]*$");
 
     public static String arrayToString(String[] args, int startIndex, String separator) {
         StringBuilder builder = new StringBuilder();
@@ -49,6 +51,10 @@ public class MiscUtils {
 
     public static boolean isId(String query) {
         return query != null && LONG_PATTERN.matcher(query).matches();
+    }
+
+    public static boolean isDouble(String s) {
+        return s != null && DOUBLE_PATTERN.matcher(s).matches();
     }
 
     public static String escapeFormatting(String prefix) {
@@ -92,7 +98,7 @@ public class MiscUtils {
     public static boolean hasVoted(Reflex reflex, User user) {
         try {
             String url = "https://discordbots.org/api/bots/" + user.getJDA().getSelfUser().getId() + "/votes?onlyids=true";
-            Headers headers = new Headers.Builder().set("Authorization", reflex.getSettings().getDboAuth()).build();
+            Headers headers = new Headers.Builder().set("Authorization", reflex.getDataManager().getSettings().getDboAuth()).build();
             Response sync = reflex.getHttpClient().getSync(url, headers);
 
             JSONArray array = new JSONArray(Objects.requireNonNull(sync.body()).string());
