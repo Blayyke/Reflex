@@ -8,10 +8,8 @@ import me.blayyke.reflex.listeners.BotListener;
 import me.blayyke.reflex.listeners.GuildListener;
 import me.blayyke.reflex.listeners.JoinLeaveListener;
 import me.blayyke.reflex.listeners.MessageListener;
-import me.blayyke.reflex.settings.BotSettings;
 import me.blayyke.reflex.utils.DatabaseUtils;
 import me.blayyke.reflex.utils.StackTraceHelper;
-import me.blayyke.reflex.utils.Version;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.OnlineStatus;
@@ -29,23 +27,21 @@ public class Reflex {
     private final CommandManager commandManager;
     private final DBManager dbManager;
     private Logger logger = LoggerFactory.getLogger(getClass().getSimpleName());
-    private BotSettings settings;
     private long developerId;
     private StackTraceHelper stackTraceHelper = new StackTraceHelper(getClass().getPackage().getName());
     private HttpClient httpClient;
     private CustomCommandManager customCommandManager;
     private MessageListener messageListener = new MessageListener(this);
     private BotStatsPoster statsPoster;
+    private DataManager dataManager;
 
     public static void main(String[] args) throws LoginException, IOException {
         new Reflex();
     }
 
     private Reflex() throws LoginException, IOException {
-        settings = new BotSettings(this);
-        settings.load();
-
-        Version.loadVersion();
+        dataManager = new DataManager(this);
+        dataManager.init();
 
         httpClient = new HttpClient();
 
@@ -59,12 +55,13 @@ public class Reflex {
         statsPoster = new BotStatsPoster(this);
 
         DefaultShardManagerBuilder builder = new DefaultShardManagerBuilder();
-        builder.setShardsTotal(settings.getTotalShardCount());
+
         builder.addEventListeners(new BotListener(this), new JoinLeaveListener(this), messageListener, new GuildListener(this));
+        builder.setShardsTotal(getDataManager().getSettings().getTotalShardCount());
+        builder.setSessionController(new SessionControllerAdapter());
+        builder.setToken(getDataManager().getSettings().getToken());
         builder.setGame(Game.playing("Starting up..."));
         builder.setStatus(OnlineStatus.DO_NOT_DISTURB);
-        builder.setSessionController(new SessionControllerAdapter());
-        builder.setToken(settings.getToken());
         this.shardManager = builder.build();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -79,10 +76,6 @@ public class Reflex {
 
     public CommandManager getCommandManager() {
         return commandManager;
-    }
-
-    public BotSettings getSettings() {
-        return settings;
     }
 
     public DBManager getDBManager() {
@@ -135,5 +128,9 @@ public class Reflex {
 
     public BotStatsPoster getStatsPoster() {
         return statsPoster;
+    }
+
+    public DataManager getDataManager() {
+        return dataManager;
     }
 }

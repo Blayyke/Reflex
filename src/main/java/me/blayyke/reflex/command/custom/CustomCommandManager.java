@@ -18,14 +18,12 @@ import org.slf4j.LoggerFactory;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class CustomCommandManager {
     private final Reflex reflex;
     private Logger logger = LoggerFactory.getLogger(Reflex.class.getSimpleName() + "-CustomCommandManager");
-    private HashMap<Long, HashMap<String, CustomCommand>> guildCommandsMap = new HashMap<>();
     private int commandFailures = 0;
     private ScriptEngine executionEngine;
     private int commandsExecuted = 0;
@@ -37,7 +35,6 @@ public class CustomCommandManager {
 
     public void loadCommands(Guild guild) {
         RedisCommands<String, String> sync = reflex.getDBManager().getSync();
-        guildCommandsMap.put(guild.getIdLong(), new HashMap<>());
         Set<String> stringSet = DatabaseUtils.getStringSet(guild, sync, DBEntryKey.COMMANDS);
 
         if (stringSet.isEmpty()) {
@@ -77,20 +74,11 @@ public class CustomCommandManager {
     }
 
     private void loadCommand(CustomCommand command) {
-        if (!guildCommandsMap.containsKey(command.getGuild().getIdLong()))
-            guildCommandsMap.put(command.getGuild().getIdLong(), new HashMap<>());
         getCommandsForGuild(command.getGuild()).put(command.getName().toLowerCase(), command);
         logger.info("Created/loaded command {} in guild {}.", command.getName(), command.getGuild().getName());
     }
 
-    public HashMap<Long, HashMap<String, CustomCommand>> getGuildCommandsMap() {
-        return guildCommandsMap;
-    }
-
     public CustomCommand getCommand(Guild guild, String commandName) {
-        if (!guildCommandsMap.containsKey(guild.getIdLong()))
-            guildCommandsMap.put(guild.getIdLong(), new HashMap<>());
-
         return getCommandsForGuild(guild).get(commandName.toLowerCase());
     }
 
@@ -141,11 +129,11 @@ public class CustomCommandManager {
     }
 
     private Map<String, CustomCommand> getCommandsForGuild(Guild guild) {
-        return guildCommandsMap.get(guild.getIdLong());
+        return reflex.getDataManager().getGuildStorage(guild).getCustomCommandMap();
     }
 
     public void deleteCommand(CustomCommand c) {
-        guildCommandsMap.get(c.getGuild().getIdLong()).remove(c.getName().toLowerCase());
+        getCommandsForGuild(c.getGuild()).remove(c.getName().toLowerCase());
 
         DatabaseUtils.delete(c.getGuild(), reflex.getDBManager().getSync(), DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + c.getName());
         DatabaseUtils.removeFromSet(c.getGuild(), reflex.getDBManager().getSync(), DBEntryKey.COMMANDS, c.getName().toLowerCase());
@@ -158,6 +146,6 @@ public class CustomCommandManager {
     }
 
     public boolean commandExists(Guild guild, String s) {
-        return guildCommandsMap.get(guild.getIdLong()).containsKey(s.toLowerCase());
+        return getCommandsForGuild(guild).containsKey(s.toLowerCase());
     }
 }

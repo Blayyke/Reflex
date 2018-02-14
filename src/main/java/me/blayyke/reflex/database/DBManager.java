@@ -24,7 +24,7 @@ public class DBManager {
         if (initialized)
             throw new IllegalStateException("Tried to initialize DBManager but it was already initialized!");
 
-        DBSettings dbSettings = reflex.getSettings().getDatabaseSettings();
+        DBSettings dbSettings = reflex.getDataManager().getSettings().getDatabaseSettings();
 
         RedisURI.Builder builder = RedisURI.builder()
                 .withDatabase(dbSettings.getDatabaseNumber())
@@ -57,7 +57,7 @@ public class DBManager {
         // String
         RedisCommands<String, String> sync = reflex.getDBManager().getSync();
         if (!DatabaseUtils.exists(guild, sync, DBEntryKey.GUILD_PREFIX))
-            DatabaseUtils.setString(guild, sync, DBEntryKey.GUILD_PREFIX, reflex.getSettings().getDefaultPrefix());
+            DatabaseUtils.setString(guild, sync, DBEntryKey.GUILD_PREFIX, reflex.getDataManager().getSettings().getDefaultPrefix());
         if (!DatabaseUtils.exists(guild, sync, DBEntryKey.JOIN_MESSAGE))
             DatabaseUtils.setString(guild, sync, DBEntryKey.JOIN_MESSAGE, null);
         if (!DatabaseUtils.exists(guild, sync, DBEntryKey.LEAVE_MESSAGE))
