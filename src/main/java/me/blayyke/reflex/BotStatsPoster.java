@@ -1,13 +1,11 @@
 package me.blayyke.reflex;
 
 import me.blayyke.reflex.utils.AbstractCallback;
+import me.blayyke.reflex.utils.MiscUtils;
 import net.dv8tion.jda.core.JDA;
 import okhttp3.Headers;
 import okhttp3.Response;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.Objects;
 
 public class BotStatsPoster {
     private Reflex reflex;
@@ -18,6 +16,7 @@ public class BotStatsPoster {
 
     public void updateAllStats(JDA shard) {
         updateStats(shard, "https://bots.discord.pw/api/bots/" + shard.getSelfUser().getId() + "/stats", reflex.getSettings().getDpwAuth());
+        updateStats(shard, "https://discordbots.org/api/bots/" + shard.getSelfUser().getId() + "/stats", reflex.getSettings().getDboAuth());
     }
 
     private void updateStats(JDA shard, String url, String auth) {
@@ -33,9 +32,11 @@ public class BotStatsPoster {
 
         reflex.getHttpClient().post(new AbstractCallback() {
             @Override
-            public void response(Response response) throws IOException {
-                System.out.println(Objects.requireNonNull(response.body()).string());
-                reflex.getLogger().info("Updated bot stats for " + url + (postBody.has("shard_id") ? "on shard " + postBody.getInt("shard_id") : "") + ".");
+            public void response(Response response) {
+                if (!MiscUtils.equalsAny(response.code(), 200, 204))
+                    reflex.getLogger().info("Unexpected response code ({}) recieved for guild update on {}", response.code(), url);
+                else
+                    reflex.getLogger().info("Updated bot stats for {} on shard {}.", url, postBody.getInt("shard_id"));
             }
         }, url, postBody, headers);
     }
