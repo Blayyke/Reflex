@@ -1,8 +1,16 @@
 package me.blayyke.reflex.utils;
 
+import me.blayyke.reflex.Reflex;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.User;
+import okhttp3.Headers;
+import okhttp3.Response;
+import org.json.JSONArray;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 import static me.blayyke.reflex.utils.ParseUtils.LONG_PATTERN;
@@ -79,5 +87,22 @@ public class MiscUtils {
     public static boolean equalsAny(int number, int... toCheck) {
         for (int i = 0; i < number; i++) if (number == toCheck[i]) return true;
         return false;
+    }
+
+    public static boolean hasVoted(Reflex reflex, User user) {
+        try {
+            String url = "https://discordbots.org/api/bots/" + user.getJDA().getSelfUser().getId() + "/votes?onlyids=true";
+            Headers headers = new Headers.Builder().set("Authorization", reflex.getSettings().getDboAuth()).build();
+            Response sync = reflex.getHttpClient().getSync(url, headers);
+
+            JSONArray array = new JSONArray(Objects.requireNonNull(sync.body()).string());
+            List<String> voterList = new ArrayList<>();
+            array.forEach(o -> voterList.add(o.toString()));
+
+            sync.close();
+            return voterList.contains(user.getId());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
