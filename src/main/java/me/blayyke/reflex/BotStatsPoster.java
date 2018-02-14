@@ -37,6 +37,8 @@ public class BotStatsPoster {
                     reflex.getLogger().info("Unexpected response code ({}) recieved for guild update on {}", response.code(), url);
                 else
                     reflex.getLogger().info("Updated bot stats for {} on shard {}.", url, postBody.getInt("shard_id"));
+
+                response.close();
             }
         }, url, postBody, headers);
     }
