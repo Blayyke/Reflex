@@ -19,11 +19,14 @@ public class HttpClient {
     }
 
     public Response getSync(String url) {
+        return getSync(url, new Headers.Builder().build());
+    }
+
+    public Response getSync(String url, Headers headers) {
         try {
-            return client.newCall(new Request.Builder().url(url).build()).execute();
+            return client.newCall(new Request.Builder().url(url).headers(headers).build()).execute();
         } catch (IOException e) {
             throw new RuntimeException(e);
-
         }
     }
 
