@@ -75,4 +75,9 @@ public class MiscUtils {
     public static int getRandom(int i) {
         return random.nextInt(i);
     }
+
+    public static boolean equalsAny(int number, int... toCheck) {
+        for (int i = 0; i < number; i++) if (number == toCheck[i]) return true;
+        return false;
+    }
 }
