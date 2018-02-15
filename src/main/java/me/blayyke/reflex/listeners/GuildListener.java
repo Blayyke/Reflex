@@ -34,7 +34,7 @@ public class GuildListener extends ListenerAdapter {
     }
 
     private void onGuildUpdate(Guild guild, boolean join) {
-        if (!guild.getSelfMember().getJoinDate().isAfter(OffsetDateTime.now().minusMinutes(10))) {
+        if (join && !guild.getSelfMember().getJoinDate().isAfter(OffsetDateTime.now().minusMinutes(10))) {
             reflex.getLogger().warn("Got a guild join for a guild we joined more than 10 minutes ago! Discord outage?");
             return;
         }
