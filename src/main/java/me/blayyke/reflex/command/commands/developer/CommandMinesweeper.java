@@ -6,6 +6,8 @@ import me.blayyke.reflex.command.CommandContext;
 import me.blayyke.reflex.game.MineSweeperGame;
 import me.blayyke.reflex.game.MineSweeperManager;
 import me.blayyke.reflex.utils.MiscUtils;
+import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.Message;
 
 public class CommandMinesweeper extends AbstractCommand {
     @Override
@@ -53,13 +55,14 @@ public class CommandMinesweeper extends AbstractCommand {
                 return;
             }
             if (mineChance > MineSweeperManager.MAX_MINE_CHANCE || mineChance < MineSweeperManager.MIN_MINE_CHANCE) {
-                context.getChannel().sendMessage("Board size must be between " + MineSweeperManager.MIN_BOARD_SIZE + " and " + MineSweeperManager.MAX_BOARD_SIZE + ".").queue();
+                context.getChannel().sendMessage("Mine chance size must be between " + MineSweeperManager.MIN_MINE_CHANCE + " and " + MineSweeperManager.MAX_MINE_CHANCE + ".").queue();
                 return;
             }
 
-            MineSweeperGame game = manager.createGame(context.getMember().getUser());
+            Message message = context.getChannel().sendMessage("Creating game...").complete();
+            MineSweeperGame game = manager.createGame(context.getMessage().getAuthor(), message);
             game.startGame(boardSize, mineChance);
-            context.getChannel().sendMessage("Game created:\n\n" + game.getBlankBoard()).queue();
+            message.editMessage("Game created:\n\n" + game.getBlankBoard()).queue();
             return;
         }
         MineSweeperGame game = getReflex().getDataManager().getGuildStorage(context.getGuild()).getMineSweeperManager().getGame(context.getMember().getUser());
@@ -88,5 +91,8 @@ public class CommandMinesweeper extends AbstractCommand {
             game.flagInput(context.getChannel(), inputX, inputY);
         } else
             game.input(context.getChannel(), inputX, inputY);
+
+        if (context.getGuild().getSelfMember().hasPermission(context.getChannel(), Permission.MESSAGE_MANAGE))
+            context.getMessage().delete().queue();
     }
 }

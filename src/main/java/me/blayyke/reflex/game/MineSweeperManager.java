@@ -1,6 +1,7 @@
 package me.blayyke.reflex.game;
 
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 
 import java.util.HashMap;
@@ -17,7 +18,7 @@ public class MineSweeperManager {
     public static int MAX_IDLE_TIME = 10;
 
     public static int MIN_BOARD_SIZE = 3;
-    public static int MAX_BOARD_SIZE = 15;
+    public static int MAX_BOARD_SIZE = 12;
     public static double MIN_MINE_CHANCE = 0.1;
     public static double MAX_MINE_CHANCE = 0.9;
 
@@ -41,9 +42,9 @@ public class MineSweeperManager {
         return gameMap.containsKey(user.getIdLong());
     }
 
-    public MineSweeperGame createGame(User user) {
-        MineSweeperGame game = new MineSweeperGame(this, user);
-        gameMap.put(user.getIdLong(), game);
+    public MineSweeperGame createGame(User author, Message message) {
+        MineSweeperGame game = new MineSweeperGame(this, message, author);
+        gameMap.put(author.getIdLong(), game);
         return game;
     }
 

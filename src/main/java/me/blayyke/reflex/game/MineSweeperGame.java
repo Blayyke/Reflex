@@ -1,11 +1,13 @@
 package me.blayyke.reflex.game;
 
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 
 public class MineSweeperGame {
     private final MineSweeperManager manager;
     private final User user;
+    private final Message message;
 
     //Board width & height
     private int boardSize;
@@ -19,11 +21,11 @@ public class MineSweeperGame {
     private boolean[][] uncoveredTiles;
     private boolean[][] bombs;
     private boolean[][] flags;
-    private CharSequence blankBoard;
 
-    public MineSweeperGame(MineSweeperManager manager, User user) {
+    public MineSweeperGame(MineSweeperManager manager, Message message, User user) {
         this.manager = manager;
         this.user = user;
+        this.message = message;
     }
 
     public void startGame(int boardSize, double bombChance) {
@@ -43,35 +45,35 @@ public class MineSweeperGame {
 
     public void input(TextChannel channel, int x, int y) {
         if (isTileUncovered(x, y)) {
-            channel.sendMessage("The tile at " + x + "," + y + " has already been uncovered.\n\n" + getVisibleBoard()).queue();
+            message.editMessage("The tile at " + x + "," + y + " has already been uncovered.\n\n" + getVisibleBoard()).queue();
             return;
         }
         if (isTileBomb(x, y)) {
-            channel.sendMessage("You hit a bomb, game over!").queue();
+            message.editMessage("You hit a bomb, game over!\n\n" + getFullBoard()).queue();
             endGame();
             return;
         }
 
         uncoverTile(x, y);
         if (isBoardComplete()) {
-            channel.sendMessage("You completed the board, congratulations!\n\n" + getVisibleBoard()).queue();
+            message.editMessage("You completed the board, congratulations!\n\n" + getVisibleBoard()).queue();
             endGame();
             return;
         }
 
-        channel.sendMessage(getVisibleBoard()).queue();
+        message.editMessage(getVisibleBoard()).queue();
     }
 
     public void flagInput(TextChannel channel, int x, int y) {
         if (isTileUncovered(x, y)) {
-            channel.sendMessage("The tile at " + x + "," + y + " has already been uncovered.\n\n" + getVisibleBoard()).queue();
+            message.editMessage("The tile at " + x + "," + y + " has already been uncovered.\n\n" + getVisibleBoard()).queue();
             return;
         }
         if (isTileFlagged(x, y))
             setTileFlagged(x, y, false);
         else setTileFlagged(x, y, true);
 
-        channel.sendMessage(getVisibleBoard()).queue();
+        message.editMessage(getVisibleBoard()).queue();
     }
 
     private void endGame() {
@@ -87,6 +89,19 @@ public class MineSweeperGame {
                     builder.append(MineSweeperManager.FLAG).append(" ");
                 else if (!isTileUncovered(x, y))
                     builder.append(MineSweeperManager.DOT).append(" ");
+                else builder.append(MineSweeperManager.getNumberEmoji(getBombsAroundTile(x, y))).append(" ");
+            }
+            builder.append("\n");
+        }
+        return builder.toString();
+    }
+
+    public String getFullBoard() {
+        StringBuilder builder = new StringBuilder();
+        for (int x = 1; x < boardSize + 1; x++) {
+            for (int y = 1; y < boardSize + 1; y++) {
+                if (isTileBomb(x, y))
+                    builder.append(MineSweeperManager.BOMB).append(" ");
                 else builder.append(MineSweeperManager.getNumberEmoji(getBombsAroundTile(x, y))).append(" ");
             }
             builder.append("\n");
