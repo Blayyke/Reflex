@@ -4,6 +4,7 @@ import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
 import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.utils.MiscUtils;
 import me.blayyke.reflex.utils.ParseUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Emote;
@@ -41,9 +42,13 @@ public class CommandEmote extends AbstractCommand {
         EmbedBuilder embedBuilder = createEmbed();
         List<Emote> emoteList = ParseUtils.getEmotes(getReflex().getShardManager(), context.getArgs()[0]);
         if (emoteList.isEmpty()) {
-            embedBuilder.setColor(Colours.WARN);
-            embedBuilder.setTitle("No emotes found");
-            embedBuilder.setDescription("I could not find any emotes with your input. Find a list of emotes with " + context.getPrefixUsed() + "emotes");
+            //No emotes found. Let's do unicode stuff
+            embedBuilder.setTitle("Character info");
+
+            for (String s : context.getArgs()) {
+                embedBuilder.appendDescription(MiscUtils.toHexString(s)).appendDescription(" | ")
+                        .appendDescription(MiscUtils.getCharName(s)).appendDescription("\n");
+            }
 
             context.getChannel().sendMessage(embedBuilder.build()).queue();
             return;
