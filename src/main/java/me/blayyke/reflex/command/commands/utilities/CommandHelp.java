@@ -16,6 +16,11 @@ public class CommandHelp extends AbstractCommand {
     }
 
     @Override
+    public String[] getAliases() {
+        return new String[]{"about"};
+    }
+
+    @Override
     public String getDesc() {
         return "View help for commands and/or categories in this bot";
     }
