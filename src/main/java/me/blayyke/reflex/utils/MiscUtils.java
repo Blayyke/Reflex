@@ -111,4 +111,26 @@ public class MiscUtils {
             throw new RuntimeException(e);
         }
     }
+
+    public static String toHexString(String st) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < st.length(); i++) {
+            builder.append(toHexString(st.charAt(i)));
+        }
+        return builder.toString();
+    }
+
+    public static String toHexString(char c) {
+        StringBuilder hex = new StringBuilder(Integer.toHexString((int) c));
+        while (hex.length() < 4) hex.insert(0, "0");
+        return "\\u" + hex.toString();
+    }
+
+    public static String getCharName(String s) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            builder.append(Character.getName(s.charAt(i)));
+        }
+        return builder.toString();
+    }
 }
