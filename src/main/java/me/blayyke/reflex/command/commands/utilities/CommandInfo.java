@@ -19,7 +19,7 @@ public class CommandInfo extends AbstractCommand {
 
     @Override
     public String[] getAliases() {
-        return new String[]{"botinfo", "information"};
+        return new String[]{"botinfo", "information", "stats", "statistics"};
     }
 
     @Override
