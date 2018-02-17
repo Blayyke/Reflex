@@ -19,6 +19,7 @@ dependencies {
     compile group: 'org.reflections', name: 'reflections', version: '0.9.11'
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     compile group: 'biz.paluch.redis', name: 'lettuce', version: '5.0.0.Beta1'
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.11.2'
 }
 
 compileJava.options.encoding = 'UTF-8'
