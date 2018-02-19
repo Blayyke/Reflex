@@ -7,7 +7,8 @@ public enum CommandCategory {
     CUSTOMIZATION("Customization", "Commands that change things about the bot for your guild. These commands require the Manage Server permission"),
     CUSTOM("Custom Commands", "Commands that are unique to this guild"),
     FUN("Fun", "Commands that are just for fun"),
-    NSFW("NSFW", "Commands that are not-safe-for-work. 18+");
+    NSFW("NSFW", "Commands that are not-safe-for-work. 18+"),
+    ECONOMY("Economy", "Commands that have something to do with points.");
 
     private String name;
     private String description;
