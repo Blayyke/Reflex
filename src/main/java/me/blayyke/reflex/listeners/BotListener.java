@@ -23,10 +23,10 @@ public class BotListener extends ListenerAdapter {
         DBManager dbManager = reflex.getDBManager();
         for (Guild guild : event.getJDA().getGuilds()) {
             dbManager.loadGuild(guild);
-
             reflex.getDataManager().setupGuildStorage(guild);
         }
 
+        reflex.setOwner(event.getJDA().asBot().getApplicationInfo().complete().getOwner());
         reflex.getStatsPoster().updateAllStats(event.getJDA());
     }
 }
