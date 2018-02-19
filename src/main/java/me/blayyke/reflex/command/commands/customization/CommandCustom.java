@@ -47,7 +47,7 @@ public class CommandCustom extends AbstractCommand {
                 if (getReflex().getCustomCommandManager().commandExists(context.getGuild(), context.getArgs()[1])) {
                     embed.setTitle("Command already exists");
                     embed.setDescription("I could not create that command as one already exists with that name. \n" +
-                            "If you want to delete the other command, run `" + getReflex().getPrefix(context.getGuild()) + context.getAlias() + " delete <name>`.");
+                            "If you want to delete the other command, run `" + getReflex().getDataManager().getGuildStorage(context.getGuild()).getPrefix() + context.getAlias() + " delete <name>`.");
 
                     context.getChannel().sendMessage(embed.build()).queue();
                     return;

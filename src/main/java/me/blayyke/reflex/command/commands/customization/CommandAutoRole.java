@@ -3,8 +3,7 @@ package me.blayyke.reflex.command.commands.customization;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
 import me.blayyke.reflex.command.CommandContext;
-import me.blayyke.reflex.database.DBEntryKey;
-import me.blayyke.reflex.utils.DatabaseUtils;
+import me.blayyke.reflex.database.keys.guild.KeyAutoRole;
 import me.blayyke.reflex.utils.MiscUtils;
 import me.blayyke.reflex.utils.ParseUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -40,10 +39,10 @@ public class CommandAutoRole extends AbstractCommand {
         embedBuilder.setTitle("Auto-role");
 
         if (!context.hasArgs()) {
-            Role currentAutoRole = getReflex().getShardManager().getRoleById(DatabaseUtils.getNumber(context.getGuild(), getReflex().getDBManager().getSync(), DBEntryKey.AUTOROLE_ID));
+            Role autoRole = getReflex().getDataManager().getGuildStorage(context.getGuild()).getAutoRole();
 
-            if (currentAutoRole == null) embedBuilder.setDescription("No auto-role currently set.");
-            else embedBuilder.setDescription("The current set auto-role is " + currentAutoRole.getName());
+            if (autoRole == null) embedBuilder.setDescription("No auto-role currently set.");
+            else embedBuilder.setDescription("The current set auto-role is " + autoRole.getName());
 
             context.getChannel().sendMessage(embedBuilder.build()).queue();
             return;
@@ -51,7 +50,7 @@ public class CommandAutoRole extends AbstractCommand {
 
         String input = MiscUtils.arrayToString(context.getArgs(), " ");
         if (MiscUtils.equalsAny(input, "disable", "off", "none", "-1")) {
-            DatabaseUtils.setNumber(context.getGuild(), getReflex().getDBManager().getSync(), DBEntryKey.AUTOROLE_ID, -1);
+            getReflex().getDBManager().set(new KeyAutoRole(context.getGuild()), String.valueOf(-1));
             embedBuilder.setDescription("The auto-role has been turned off.");
             context.getChannel().sendMessage(embedBuilder.build()).queue();
             return;
@@ -75,7 +74,7 @@ public class CommandAutoRole extends AbstractCommand {
             return;
         }
 
-        DatabaseUtils.setNumber(context.getGuild(), getReflex().getDBManager().getSync(), DBEntryKey.AUTOROLE_ID, newRole.getIdLong());
+        getReflex().getDBManager().set(new KeyAutoRole(context.getGuild()), newRole.getId());
         embedBuilder.setDescription("The auto-role has been set to " + newRole.getName() + ".");
         context.getChannel().sendMessage(embedBuilder.build()).queue();
     }

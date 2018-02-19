@@ -5,9 +5,12 @@ import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.Reflex;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandContext;
-import me.blayyke.reflex.database.DBEntryKey;
-import me.blayyke.reflex.database.DBEntryKeyCCmd;
-import me.blayyke.reflex.utils.DatabaseUtils;
+import me.blayyke.reflex.database.keys.KeyCustomCommand;
+import me.blayyke.reflex.database.keys.guild.KeyCommands;
+import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldAction;
+import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldCreator;
+import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldDesc;
+import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldType;
 import me.blayyke.reflex.utils.MiscUtils;
 import me.blayyke.reflex.utils.UserUtils;
 import net.dv8tion.jda.core.entities.Guild;
@@ -35,21 +38,17 @@ public class CustomCommandManager {
 
     public void loadCommands(Guild guild) {
         RedisCommands<String, String> sync = reflex.getDBManager().getSync();
-        Set<String> stringSet = DatabaseUtils.getStringSet(guild, sync, DBEntryKey.COMMANDS);
-
-        if (stringSet.isEmpty()) {
-            logger.info("Guild {} has no custom commands to load.", guild.getName());
-            return;
-        }
+        Set<String> stringSet = reflex.getDBManager().getSet(new KeyCommands(guild));
+        if (stringSet.isEmpty()) return;
 
         for (String name : stringSet) {
             if (name == null) throw new RuntimeException("Command name is null!");
 
-            String desc = DatabaseUtils.getHashString(guild, sync, DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + name, DBEntryKeyCCmd.DESCRIPTION);
-            String action = DatabaseUtils.getHashString(guild, sync, DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + name, DBEntryKeyCCmd.ACTION);
-            long creatorId = DatabaseUtils.getHashNumber(guild, sync, DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + name, DBEntryKeyCCmd.CREATOR);
-            String typeStr = DatabaseUtils.getHashString(guild, sync, DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + name, DBEntryKeyCCmd.TYPE).toUpperCase();
-            CustomCommandType type = typeStr.isEmpty() ? null : CustomCommandType.valueOf(typeStr);
+            String desc = reflex.getDBManager().hashGet(new CCFieldDesc(guild, name));
+            String action = reflex.getDBManager().hashGet(new CCFieldAction(guild, name));
+            long creatorId = Long.parseLong(reflex.getDBManager().hashGet(new CCFieldCreator(guild, name)));
+            String typeStr = reflex.getDBManager().hashGet(new CCFieldType(guild, name));
+            CustomCommandType type = typeStr == null || typeStr.isEmpty() ? null : CustomCommandType.valueOf(typeStr);
 
             if (action == null)
                 action = "channel.sendMessage(\"The action for this command has not been configured. Please contact an administrator.\");";
@@ -69,7 +68,7 @@ public class CustomCommandManager {
     public void createCommand(CustomCommand command) {
         if (command == null)
             throw new NullPointerException();
-        DatabaseUtils.addToSet(command.getGuild(), reflex.getDBManager().getSync(), DBEntryKey.COMMANDS, command.getName().toLowerCase());
+        reflex.getDBManager().appendToSet(new KeyCommands(command.getGuild()), command.getName().toLowerCase());
         loadCommand(command);
     }
 
@@ -135,8 +134,8 @@ public class CustomCommandManager {
     public void deleteCommand(CustomCommand c) {
         getCommandsForGuild(c.getGuild()).remove(c.getName().toLowerCase());
 
-        DatabaseUtils.delete(c.getGuild(), reflex.getDBManager().getSync(), DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + c.getName());
-        DatabaseUtils.removeFromSet(c.getGuild(), reflex.getDBManager().getSync(), DBEntryKey.COMMANDS, c.getName().toLowerCase());
+        reflex.getDBManager().delete(new KeyCustomCommand(c.getGuild(), c.getName()));
+        reflex.getDBManager().removeFromSet(new KeyCommands(c.getGuild()), c.getName());
 
         logger.info("Deleted command {} in guild {}.", c.getName(), c.getGuild().getName());
     }

@@ -4,8 +4,7 @@ import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
 import me.blayyke.reflex.command.CommandContext;
-import me.blayyke.reflex.database.DBEntryKey;
-import me.blayyke.reflex.utils.DatabaseUtils;
+import me.blayyke.reflex.database.keys.guild.KeyAnnouncerChannel;
 import me.blayyke.reflex.utils.ParseUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -48,7 +47,7 @@ public class CommandAnnouncer extends AbstractCommand {
                 return;
             }
 
-            TextChannel oldChannel = context.getGuild().getTextChannelById(context.getReflex().getAnnouncerChannelId(context.getGuild()));
+            TextChannel oldChannel = getReflex().getDataManager().getGuildStorage(context.getGuild()).getAnnouncerChannel();
             TextChannel newChannel = channels.get(0);
             String oldName = oldChannel == null ? "None set." : oldChannel.getAsMention();
             String newName = newChannel.getAsMention();
@@ -56,13 +55,13 @@ public class CommandAnnouncer extends AbstractCommand {
             embed.setDescription("The announcer channel has been updated.");
             embed.addField("Old channel", oldName, true);
 
-            DatabaseUtils.setNumber(context.getGuild(), getReflex().getDBManager().getSync(), DBEntryKey.ANNOUNCEMENT_CHANNEL, newChannel.getIdLong());
+            getReflex().getDBManager().set(new KeyAnnouncerChannel(context.getGuild()), newChannel.getId());
 
             embed.addField("New channel", newName, true);
 
             context.getChannel().sendMessage(embed.build()).queue();
         } else {
-            TextChannel channel = context.getGuild().getTextChannelById(getReflex().getAnnouncerChannelId(context.getGuild()));
+            TextChannel channel = getReflex().getDataManager().getGuildStorage(context.getGuild()).getAnnouncerChannel();
 
             embed.addField("Current channel", channel == null ? "None set." : channel.getAsMention(), true);
             context.getChannel().sendMessage(embed.build()).queue();

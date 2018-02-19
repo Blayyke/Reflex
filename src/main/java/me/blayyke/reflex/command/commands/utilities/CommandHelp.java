@@ -4,6 +4,7 @@ import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
 import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.utils.UserUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 
@@ -34,17 +35,24 @@ public class CommandHelp extends AbstractCommand {
     public void execute(CommandContext context) {
         if (!context.hasArgs()) {
             EmbedBuilder embed = createEmbed(Colours.INFO);
-            embed.setDescription("Guild invite: https://discord.gg/h5V3c9s");
-            embed.appendDescription("\nBot Website: https://reflex-bot.github.io");
-            embed.appendDescription("\n" + context.getJDA().getSelfUser().getName() + " is a bot designed to be useful for a range of purposes, with a suite of commands ranging from moderation commands (kick, ban, etc.) commands to random image commands (dogs, cats, ect).");
+
             embed.setTitle("Bot help");
+            embed.appendDescription(context.getJDA().getSelfUser().getName() + " is a bot made by " + UserUtils.formatUser(getReflex().getOwner()) + ", created to be useful and customizable.")
+                    .appendDescription("\n\n")
+                    .appendDescription("To get help on a command, use " + context.getPrefixUsed() + context.getAlias() + " <command>")
+                    .appendDescription("\n")
+                    .appendDescription("To view all commands in a category, use " + context.getPrefixUsed() + context.getAlias() + " <category>")
+                    .appendDescription("\n\n")
+                    .appendDescription("To add me to your guild, click [here](https://reflex-bot.github.io/invite)")
+                    .appendDescription("\n")
+                    .appendDescription("To get support, join [this guild](https://reflex-bot.github.io/server)")
+                    .appendDescription("\n")
+                    .appendDescription("You can find my source code [here](https://reflex-bot.github.io/source)");
 
             StringBuilder builder = new StringBuilder();
             for (CommandCategory commandCategory : CommandCategory.values())
                 builder.append("- ").append(commandCategory.getName()).append("\n");
             String categoryStr = builder.toString();
-
-
             embed.addField("Categories", categoryStr.substring(0, categoryStr.length() - 1), false);
 
             context.getChannel().sendMessage(embed.build()).queue();
@@ -73,7 +81,7 @@ public class CommandHelp extends AbstractCommand {
         if (cmd != null) {
             EmbedBuilder embed = createEmbed(Colours.INFO);
             embed.setTitle("Bot help");
-            embed.setDescription(getReflex().getPrefix(context.getGuild()).toLowerCase() + "**" + cmd.getName() + "** - " + cmd.getDesc());
+            embed.setDescription(context.getPrefixUsed() + "**" + cmd.getName() + "** - " + cmd.getDesc());
 
             if (cmd.getRequiredPermissions().length > 0) {
                 StringBuilder builder = new StringBuilder();

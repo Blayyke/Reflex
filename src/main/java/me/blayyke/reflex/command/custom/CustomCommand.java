@@ -4,9 +4,10 @@ import me.blayyke.reflex.Reflex;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
 import me.blayyke.reflex.command.CommandContext;
-import me.blayyke.reflex.database.DBEntryKey;
-import me.blayyke.reflex.database.DBEntryKeyCCmd;
-import me.blayyke.reflex.utils.DatabaseUtils;
+import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldAction;
+import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldCreator;
+import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldDesc;
+import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldType;
 import me.blayyke.reflex.utils.MiscUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -40,7 +41,7 @@ public class CustomCommand extends AbstractCommand {
 
     @Override
     public void execute(CommandContext context) {
-        if (getAction().isEmpty()) {
+        if (getAction() == null || getAction().isEmpty()) {
             context.getChannel().sendMessage("Action not set for this command. Please get an admin to set it with " + context.getPrefixUsed() + "custom action " + getName() + " <action>").queue();
             return;
         }
@@ -76,17 +77,22 @@ public class CustomCommand extends AbstractCommand {
 
     public void setAction(String action) {
         this.action = action;
-        DatabaseUtils.setHashString(getGuild(), getReflex().getDBManager().getSync(), DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + name, DBEntryKeyCCmd.ACTION, action);
+        getReflex().getDBManager().hashSet(new CCFieldAction(getGuild(), getName()), action);
     }
 
     public void setCreatorId(long creatorId) {
         this.creatorId = creatorId;
-        DatabaseUtils.setHashNumber(getGuild(), getReflex().getDBManager().getSync(), DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + name, DBEntryKeyCCmd.CREATOR, creatorId);
+        getReflex().getDBManager().hashSet(new CCFieldCreator(getGuild(), getName()), String.valueOf(creatorId));
     }
 
     public void setDesc(String desc) {
         this.desc = desc;
-        DatabaseUtils.setHashString(getGuild(), getReflex().getDBManager().getSync(), DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + name, DBEntryKeyCCmd.DESCRIPTION, desc);
+        getReflex().getDBManager().hashSet(new CCFieldDesc(getGuild(), getName()), desc);
+    }
+
+    public void setType(CustomCommandType type) {
+        this.type = type;
+        getReflex().getDBManager().hashSet(new CCFieldType(getGuild(), getName()), String.valueOf(type));
     }
 
     private String getAction() {
@@ -108,10 +114,5 @@ public class CustomCommand extends AbstractCommand {
 
     public CustomCommandType getType() {
         return type;
-    }
-
-    public void setType(CustomCommandType type) {
-        this.type = type;
-        DatabaseUtils.setHashString(getGuild(), getReflex().getDBManager().getSync(), DBEntryKey.CUSTOM_COMMAND.getRedisKey() + "_" + name, DBEntryKeyCCmd.TYPE, type.toString().toLowerCase());
     }
 }

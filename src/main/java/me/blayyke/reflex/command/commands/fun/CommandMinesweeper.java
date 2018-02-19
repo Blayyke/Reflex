@@ -1,11 +1,13 @@
-package me.blayyke.reflex.command.commands.developer;
+package me.blayyke.reflex.command.commands.fun;
 
+import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
 import me.blayyke.reflex.command.CommandContext;
 import me.blayyke.reflex.game.MineSweeperGame;
 import me.blayyke.reflex.game.MineSweeperManager;
 import me.blayyke.reflex.utils.MiscUtils;
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 
@@ -33,29 +35,46 @@ public class CommandMinesweeper extends AbstractCommand {
     @Override
     public void execute(CommandContext context) {
         MineSweeperManager manager = getReflex().getDataManager().getGuildStorage(context.getGuild()).getMineSweeperManager();
+        EmbedBuilder embedBuilder = createEmbed();
+        embedBuilder.setTitle("Minesweeper");
 
         if (!manager.userHasGame(context.getMember().getUser())) {
             if (context.getArgs().length < 2) {
-                context.getChannel().sendMessage("Missing required args: <board size> <mine chance>").queue();
+                embedBuilder.setColor(Colours.WARN);
+
+                embedBuilder.setDescription("Missing required args: <board size> <mine chance>");
+                context.getChannel().sendMessage(embedBuilder.build()).queue();
                 return;
             }
             if (!MiscUtils.isId(context.getArgs()[0])) {
-                context.getChannel().sendMessage("Argument <1 / board size> must be a number!").queue();
+                embedBuilder.setColor(Colours.WARN);
+
+                embedBuilder.setDescription("Argument <1 / board size> must be a number!");
+                context.getChannel().sendMessage(embedBuilder.build()).queue();
                 return;
             }
             if (!MiscUtils.isDouble(context.getArgs()[1])) {
-                context.getChannel().sendMessage("Argument <2 / mine chance> must be a decimal number!").queue();
+                embedBuilder.setColor(Colours.WARN);
+
+                embedBuilder.setDescription("Argument <2 / mine chance> must be a decimal number!");
+                context.getChannel().sendMessage(embedBuilder.build()).queue();
                 return;
             }
             int boardSize = Integer.parseInt(context.getArgs()[0]);
             double mineChance = Double.parseDouble(context.getArgs()[1]);
 
             if (boardSize > MineSweeperManager.MAX_BOARD_SIZE || boardSize < MineSweeperManager.MIN_BOARD_SIZE) {
-                context.getChannel().sendMessage("Board size must be between " + MineSweeperManager.MIN_BOARD_SIZE + " and " + MineSweeperManager.MAX_BOARD_SIZE + ".").queue();
+                embedBuilder.setColor(Colours.WARN);
+
+                embedBuilder.setDescription("Board size must be between " + MineSweeperManager.MIN_BOARD_SIZE + " and " + MineSweeperManager.MAX_BOARD_SIZE + ".");
+                context.getChannel().sendMessage(embedBuilder.build()).queue();
                 return;
             }
             if (mineChance > MineSweeperManager.MAX_MINE_CHANCE || mineChance < MineSweeperManager.MIN_MINE_CHANCE) {
-                context.getChannel().sendMessage("Mine chance size must be between " + MineSweeperManager.MIN_MINE_CHANCE + " and " + MineSweeperManager.MAX_MINE_CHANCE + ".").queue();
+                embedBuilder.setColor(Colours.WARN);
+
+                embedBuilder.setDescription("Mine chance size must be between " + MineSweeperManager.MIN_MINE_CHANCE + " and " + MineSweeperManager.MAX_MINE_CHANCE + ".");
+                context.getChannel().sendMessage(embedBuilder.build()).queue();
                 return;
             }
 
@@ -68,24 +87,37 @@ public class CommandMinesweeper extends AbstractCommand {
         MineSweeperGame game = getReflex().getDataManager().getGuildStorage(context.getGuild()).getMineSweeperManager().getGame(context.getMember().getUser());
 
         if (context.getArgs().length < 2) {
-            context.getChannel().sendMessage("Missing required args: <x> <y> [flag]").queue();
+            embedBuilder.setColor(Colours.WARN);
+
+            embedBuilder.setDescription("Missing required args: <x> <y> [flag]");
+            context.getChannel().sendMessage(embedBuilder.build()).queue();
             return;
         }
 
         if (!MiscUtils.isId(context.getArgs()[0])) {
-            context.getChannel().sendMessage("Argument <1 / x-coordinate> must be a number!").queue();
+            embedBuilder.setColor(Colours.WARN);
+
+            embedBuilder.setDescription("Argument <1 / x-coordinate> must be a number!");
+            context.getChannel().sendMessage(embedBuilder.build()).queue();
             return;
         }
         if (!MiscUtils.isId(context.getArgs()[1])) {
-            context.getChannel().sendMessage("Argument <2 / y-coordinate> must be a number!").queue();
+            embedBuilder.setColor(Colours.WARN);
+
+            embedBuilder.setDescription("Argument <2 / y-coordinate> must be a number!");
+            context.getChannel().sendMessage(embedBuilder.build()).queue();
             return;
         }
 
         int inputX = Integer.parseInt(context.getArgs()[0]);
         int inputY = Integer.parseInt(context.getArgs()[1]);
+
         if (context.getArgs().length > 2) {
             if (!context.getArgs()[2].equalsIgnoreCase("flag")) {
-                context.getChannel().sendMessage("Argument <3 / string> must equal `flag`!").queue();
+                embedBuilder.setColor(Colours.WARN);
+
+                embedBuilder.setDescription("Argument <3 / string> must equal `flag`!");
+                context.getChannel().sendMessage(embedBuilder.build()).queue();
                 return;
             }
             game.flagInput(context.getChannel(), inputX, inputY);
