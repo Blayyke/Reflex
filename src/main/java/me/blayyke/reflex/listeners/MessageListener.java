@@ -19,7 +19,7 @@ public class MessageListener extends ListenerAdapter {
             return;
         if (!event.getChannel().canTalk()) return;
 
-        String cmdPrefix = reflex.getPrefix(event.getGuild());
+        String cmdPrefix = reflex.getDataManager().getGuildStorage(event.getGuild()).getPrefix();
         String content = event.getMessage().getContentRaw().replaceAll(" +", " ");
 
         if (content == null) {

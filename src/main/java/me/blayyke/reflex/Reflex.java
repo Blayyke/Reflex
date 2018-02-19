@@ -2,19 +2,16 @@ package me.blayyke.reflex;
 
 import me.blayyke.reflex.command.CommandManager;
 import me.blayyke.reflex.command.custom.CustomCommandManager;
-import me.blayyke.reflex.database.DBEntryKey;
 import me.blayyke.reflex.database.DBManager;
 import me.blayyke.reflex.listeners.BotListener;
 import me.blayyke.reflex.listeners.GuildListener;
 import me.blayyke.reflex.listeners.JoinLeaveListener;
 import me.blayyke.reflex.listeners.MessageListener;
-import me.blayyke.reflex.utils.DatabaseUtils;
-import me.blayyke.reflex.utils.StackTraceHelper;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
-import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.SessionControllerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +25,13 @@ public class Reflex {
     private final DBManager dbManager;
     private Logger logger = LoggerFactory.getLogger(getClass().getSimpleName());
     private long developerId;
-    private StackTraceHelper stackTraceHelper = new StackTraceHelper(getClass().getPackage().getName());
     private HttpClient httpClient;
     private CustomCommandManager customCommandManager;
     private MessageListener messageListener = new MessageListener(this);
     private BotStatsPoster statsPoster;
     private DataManager dataManager;
+    private User owner;
+    private PointManager pointManager;
 
     public static void main(String[] args) throws LoginException, IOException {
         new Reflex();
@@ -54,8 +52,9 @@ public class Reflex {
 
         statsPoster = new BotStatsPoster(this);
 
-        DefaultShardManagerBuilder builder = new DefaultShardManagerBuilder();
+        pointManager = new PointManager(this);
 
+        DefaultShardManagerBuilder builder = new DefaultShardManagerBuilder();
         builder.addEventListeners(new BotListener(this), new JoinLeaveListener(this), messageListener, new GuildListener(this));
         builder.setShardsTotal(getDataManager().getSettings().getTotalShardCount());
         builder.setSessionController(new SessionControllerAdapter());
@@ -94,26 +93,6 @@ public class Reflex {
         this.developerId = developerId;
     }
 
-    public StackTraceHelper getStackTraceHelper() {
-        return stackTraceHelper;
-    }
-
-    public String getPrefix(Guild guild) {
-        return DatabaseUtils.getString(guild, dbManager.getSync(), DBEntryKey.GUILD_PREFIX);
-    }
-
-    public String getWelcomeMessage(Guild guild) {
-        return DatabaseUtils.getString(guild, dbManager.getSync(), DBEntryKey.JOIN_MESSAGE);
-    }
-
-    public String getLeaveMessage(Guild guild) {
-        return DatabaseUtils.getString(guild, dbManager.getSync(), DBEntryKey.LEAVE_MESSAGE);
-    }
-
-    public long getAnnouncerChannelId(Guild guild) {
-        return DatabaseUtils.getNumber(guild, dbManager.getSync(), DBEntryKey.ANNOUNCEMENT_CHANNEL);
-    }
-
     public HttpClient getHttpClient() {
         return httpClient;
     }
@@ -132,5 +111,17 @@ public class Reflex {
 
     public DataManager getDataManager() {
         return dataManager;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public PointManager getPointManager() {
+        return pointManager;
     }
 }
