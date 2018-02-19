@@ -5,9 +5,17 @@ import com.lambdaworks.redis.RedisURI;
 import com.lambdaworks.redis.api.StatefulRedisConnection;
 import com.lambdaworks.redis.api.sync.RedisCommands;
 import me.blayyke.reflex.Reflex;
+import me.blayyke.reflex.database.keys.AbstractKey;
+import me.blayyke.reflex.database.keys.guild.KeyCommands;
+import me.blayyke.reflex.database.keys.hash.AbstractHashKey;
 import me.blayyke.reflex.settings.DBSettings;
-import me.blayyke.reflex.utils.DatabaseUtils;
 import net.dv8tion.jda.core.entities.Guild;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class DBManager {
     private final Reflex reflex;
@@ -15,6 +23,7 @@ public class DBManager {
     private RedisClient redisClient;
     private StatefulRedisConnection<String, String> connection;
     private RedisCommands<String, String> sync;
+    private Logger logger = LoggerFactory.getLogger(getClass().getSimpleName());
 
     public DBManager(Reflex bot) {
         this.reflex = bot;
@@ -39,12 +48,12 @@ public class DBManager {
         sync = connection.sync();
         sync.clientSetname("ReflexDBClient");
 
-        DatabaseUtils.getLogger().info("Successful DB startup.");
+        getLogger().info("Successful DB startup.");
         initialized = true;
     }
 
     public void shutdown() {
-        DatabaseUtils.getLogger().info("Shutting down database connection.");
+        getLogger().info("Shutting down database connection.");
         connection.close();
         redisClient.shutdown();
     }
@@ -54,28 +63,63 @@ public class DBManager {
     }
 
     public void loadGuild(Guild guild) {
-        // String
         RedisCommands<String, String> sync = reflex.getDBManager().getSync();
-        if (!DatabaseUtils.exists(guild, sync, DBEntryKey.GUILD_PREFIX))
-            DatabaseUtils.setString(guild, sync, DBEntryKey.GUILD_PREFIX, reflex.getDataManager().getSettings().getDefaultPrefix());
-        if (!DatabaseUtils.exists(guild, sync, DBEntryKey.JOIN_MESSAGE))
-            DatabaseUtils.setString(guild, sync, DBEntryKey.JOIN_MESSAGE, null);
-        if (!DatabaseUtils.exists(guild, sync, DBEntryKey.LEAVE_MESSAGE))
-            DatabaseUtils.setString(guild, sync, DBEntryKey.LEAVE_MESSAGE, null);
-
-        // Number
-        if (!DatabaseUtils.exists(guild, sync, DBEntryKey.ANNOUNCEMENT_CHANNEL))
-            DatabaseUtils.setNumber(guild, sync, DBEntryKey.ANNOUNCEMENT_CHANNEL, -1);
-        if (!DatabaseUtils.exists(guild, sync, DBEntryKey.AUTOROLE_ID))
-            DatabaseUtils.setNumber(guild, sync, DBEntryKey.AUTOROLE_ID, -1);
 
         reflex.getCustomCommandManager().loadCommands(guild);
         reflex.getLogger().info("Finished setting up guild {} ({})", guild.getName(), guild.getId());
     }
 
     public void purgeGuild(Guild guild) {
-        RedisCommands<String, String> sync = reflex.getDBManager().getSync();
-        DatabaseUtils.delete(guild, sync, DBEntryKey.values());
-        reflex.getLogger().info("Removed guild {} ({}) from database.", guild.getName(), guild.getId());
+        throw new NotImplementedException();
+//        reflex.getLogger().info("Removed guild {} ({}) from database.", guild.getName(), guild.getId());
+    }
+
+    public Logger getLogger() {
+        return logger;
+    }
+
+
+    public String get(AbstractKey key) {
+        return getSync().get(key.getFormattedKey());
+    }
+
+    public void set(AbstractKey key, String value) {
+        getSync().set(key.getFormattedKey(), value);
+    }
+
+    public boolean keyExists(AbstractKey key) {
+        return getSync().exists(key.getFormattedKey()) >= 1;
+    }
+
+    public void setExpiry(AbstractKey key, TimeUnit timeUnit, int amount) {
+        getSync().expire(key.getFormattedKey(), timeUnit.toSeconds(amount));
+    }
+
+    public Set<String> getSet(AbstractKey key) {
+        return getSync().smembers(key.getFormattedKey());
+    }
+
+    public void appendToSet(AbstractKey key, String value) {
+        getSync().sadd(key.getFormattedKey(), value);
+    }
+
+    public boolean hashExists(AbstractHashKey key) {
+        return getSync().hexists(key.getFormattedKey(), key.getField());
+    }
+
+    public String hashGet(AbstractHashKey key) {
+        return getSync().hget(key.getFormattedKey(), key.getField());
+    }
+
+    public void hashSet(AbstractHashKey key, String value) {
+        getSync().hset(key.getFormattedKey(), key.getField(), value);
+    }
+
+    public void delete(AbstractKey key) {
+        getSync().del(key.getFormattedKey());
+    }
+
+    public void removeFromSet(KeyCommands keyCommands, String name) {
+        getSync().srem(keyCommands.getFormattedKey(), name);
     }
 }
