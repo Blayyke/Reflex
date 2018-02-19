@@ -2,8 +2,6 @@ package me.blayyke.reflex.listeners;
 
 import com.lambdaworks.redis.api.sync.RedisCommands;
 import me.blayyke.reflex.Reflex;
-import me.blayyke.reflex.database.DBEntryKey;
-import me.blayyke.reflex.utils.DatabaseUtils;
 import me.blayyke.reflex.utils.MiscUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -33,24 +31,16 @@ public class JoinLeaveListener extends ListenerAdapter {
     private void onJoinLeave(Guild guild, Member member, boolean join) {
         RedisCommands<String, String> sync = reflex.getDBManager().getSync();
 
-        long autoRoleId = DatabaseUtils.getNumber(guild, sync, DBEntryKey.AUTOROLE_ID);
-        if (autoRoleId != -1) {
-            Role role = reflex.getShardManager().getRoleById(autoRoleId);
-            if ((role) != null)
-                guild.getController().addRolesToMember(member, role).reason("Auto-role application.").queue();
-        }
+        Role autoRole = reflex.getDataManager().getGuildStorage(guild).getAutoRole();
+        if ((autoRole) != null)
+            guild.getController().addRolesToMember(member, autoRole).reason("Auto-role application.").queue();
 
-        String message = DatabaseUtils.getString(guild, sync, join ? DBEntryKey.JOIN_MESSAGE : DBEntryKey.LEAVE_MESSAGE);
-        long channelId = DatabaseUtils.getNumber(guild, sync, DBEntryKey.ANNOUNCEMENT_CHANNEL);
-
+        String message = join ? reflex.getDataManager().getGuildStorage(guild).getWelcomeMessage() : reflex.getDataManager().getGuildStorage(guild).getLeaveMessage();
         if (message == null || message.isEmpty()) return;
-        TextChannel channel = guild.getTextChannelById(channelId);
+
+        TextChannel channel = reflex.getDataManager().getGuildStorage(guild).getAnnouncerChannel();
         if (channel == null) return;
 
-        channel.sendMessage(
-                MiscUtils.formatStringGuild(
-                        MiscUtils.formatStringUser(message, member.getUser()
-                        ), guild)
-        ).queue();
+        channel.sendMessage(MiscUtils.formatStringGuild(MiscUtils.formatStringUser(message, member.getUser()), guild)).queue();
     }
 }
