@@ -26,7 +26,7 @@ public class DataManager {
     }
 
     public void setupGuildStorage(Guild guild) {
-        guildStorageMap.put(guild.getIdLong(), new GuildStorage(guild));
+        guildStorageMap.put(guild.getIdLong(), new GuildStorage(reflex, guild));
     }
 
     public GuildStorage getGuildStorage(Guild guild) {
