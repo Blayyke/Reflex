@@ -12,7 +12,6 @@ import me.blayyke.reflex.settings.DBSettings;
 import net.dv8tion.jda.core.entities.Guild;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -69,15 +68,9 @@ public class DBManager {
         reflex.getLogger().info("Finished setting up guild {} ({})", guild.getName(), guild.getId());
     }
 
-    public void purgeGuild(Guild guild) {
-        throw new NotImplementedException();
-//        reflex.getLogger().info("Removed guild {} ({}) from database.", guild.getName(), guild.getId());
-    }
-
     public Logger getLogger() {
         return logger;
     }
-
 
     public String get(AbstractKey key) {
         return getSync().get(key.getFormattedKey());
