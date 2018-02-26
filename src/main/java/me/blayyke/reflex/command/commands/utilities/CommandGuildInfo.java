@@ -25,7 +25,7 @@ public class CommandGuildInfo extends AbstractCommand {
 
     @Override
     public String[] getAliases() {
-        return new String[]{"guild", "gi", "ginfo"};
+        return new String[]{"guild", "gi", "server", "serverinfo", "si"};
     }
 
     @Override
@@ -44,7 +44,7 @@ public class CommandGuildInfo extends AbstractCommand {
         embedBuilder.addField("Members", String.valueOf(guild.getMembers().size()), true);
 
         embedBuilder.addField("2FA Enabled", (guild.getRequiredMFALevel() == Guild.MFALevel.TWO_FACTOR_AUTH ? "Yes" : "No"), true);
-        embedBuilder.addField("Voice AFK Timeout", guild.getAfkTimeout().getSeconds() + " seconds", true);
+        embedBuilder.addField("Voice AFK Timeout", guild.getAfkTimeout().getSeconds() / 60 + " minutes", true);
 
         context.getChannel().sendMessage(embedBuilder.build()).queue();
     }
