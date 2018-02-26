@@ -1,6 +1,7 @@
 package me.blayyke.reflex;
 
 import me.blayyke.reflex.command.custom.CustomCommand;
+import me.blayyke.reflex.database.keys.KeyModLogChannel;
 import me.blayyke.reflex.database.keys.guild.*;
 import me.blayyke.reflex.game.MineSweeperManager;
 import me.blayyke.reflex.utils.MiscUtils;
@@ -57,5 +58,16 @@ public class GuildStorage {
         String s = reflex.getDBManager().get(new KeyAutoRole(guild));
         if (s == null || s.isEmpty() || !MiscUtils.isId(s)) return null;
         return guild.getRoleById(s);
+    }
+
+    public TextChannel getModLogChannel() {
+        String id = reflex.getDBManager().get(new KeyModLogChannel(guild));
+
+        if (id == null || id.isEmpty() || !MiscUtils.isId(id)) return null;
+        return reflex.getShardManager().getTextChannelById(id);
+    }
+
+    public void setModLogChannel(TextChannel modLogChannel) {
+        reflex.getDBManager().set(new KeyModLogChannel(guild), modLogChannel == null ? null : modLogChannel.getId());
     }
 }
