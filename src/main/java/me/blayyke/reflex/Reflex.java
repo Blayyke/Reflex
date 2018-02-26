@@ -3,10 +3,7 @@ package me.blayyke.reflex;
 import me.blayyke.reflex.command.CommandManager;
 import me.blayyke.reflex.command.custom.CustomCommandManager;
 import me.blayyke.reflex.database.DBManager;
-import me.blayyke.reflex.listeners.BotListener;
-import me.blayyke.reflex.listeners.GuildListener;
-import me.blayyke.reflex.listeners.JoinLeaveListener;
-import me.blayyke.reflex.listeners.MessageListener;
+import me.blayyke.reflex.listeners.*;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.OnlineStatus;
@@ -55,7 +52,7 @@ public class Reflex {
         pointManager = new PointManager(this);
 
         DefaultShardManagerBuilder builder = new DefaultShardManagerBuilder();
-        builder.addEventListeners(new BotListener(this), new JoinLeaveListener(this), messageListener, new GuildListener(this));
+        builder.addEventListeners(new BotListener(this), new JoinLeaveListener(this), messageListener, new ModLogsListener(this), new GuildListener(this));
         builder.setShardsTotal(getDataManager().getSettings().getTotalShardCount());
         builder.setSessionController(new SessionControllerAdapter());
         builder.setToken(getDataManager().getSettings().getToken());
