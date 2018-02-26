@@ -32,12 +32,12 @@ public class CommandPrefix extends AbstractCommand {
             embed.setDescription("The prefix has been updated.");
             embed.addField("Old prefix", MiscUtils.escapeFormatting(getReflex().getDataManager().getGuildStorage(context.getGuild()).getPrefix()), true);
 
-            getReflex().getDBManager().set(new KeyPrefix(context.getGuild()), MiscUtils.arrayToString(context.getArgs(), " ").toLowerCase());
-            embed.addField("New prefix", MiscUtils.escapeFormatting(getReflex().getDataManager().getGuildStorage(context.getGuild()).getPrefix()), true);
+            getReflex().getDBManager().set(new KeyPrefix(context.getGuild()), MiscUtils.arrayToString(context.getArgs(), " ").replace("_", " ").toLowerCase());
+            embed.addField("New prefix", "`" + MiscUtils.escapeFormatting(getReflex().getDataManager().getGuildStorage(context.getGuild()).getPrefix()) + "`", true);
 
             context.getChannel().sendMessage(embed.build()).queue();
         } else {
-            embed.addField("Current prefix", MiscUtils.escapeFormatting(getReflex().getDataManager().getGuildStorage(context.getGuild()).getPrefix()), true);
+            embed.addField("Current prefix", "`" + MiscUtils.escapeFormatting(getReflex().getDataManager().getGuildStorage(context.getGuild()).getPrefix()) + "`", true);
             embed.setDescription("You can also mention the bot to use as a prefix.");
             context.getChannel().sendMessage(embed.build()).queue();
         }
