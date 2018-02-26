@@ -35,11 +35,11 @@ public class CommandFortune extends AbstractCommand {
             @Override
             public void response(Response response) throws IOException {
                 EmbedBuilder embedBuilder = createEmbed();
-                JSONArray cookieArray = new JSONArray(Objects.requireNonNull(response.body()).string());
-                JSONObject obj = cookieArray.getJSONObject(0).getJSONObject("fortune");
+                JSONArray array = new JSONArray(Objects.requireNonNull(response.body()).string());
+                JSONObject object = array.getJSONObject(0).getJSONObject("fortune");
 
                 embedBuilder.setTitle("Fortune");
-                embedBuilder.setDescription(obj.getString("message"));
+                embedBuilder.setDescription(object.getString("message"));
 
                 context.getChannel().sendMessage(embedBuilder.build()).queue();
             }
