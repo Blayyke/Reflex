@@ -65,11 +65,6 @@ public class MiscUtils {
                 .replace("_", "\\_");
     }
 
-    public static boolean equalsAny(String message, String... toCheck) {
-        for (String s : toCheck) if (s != null && s.equals(message)) return true;
-        return false;
-    }
-
     public static String formatStringUser(String string, User user) {
         return string
                 .replace("%user.name", user.getName())
@@ -88,11 +83,6 @@ public class MiscUtils {
 
     public static int getRandom(int i) {
         return random.nextInt(i);
-    }
-
-    public static boolean equalsAny(int number, int... toCheck) {
-        for (int i = 0; i < number; i++) if (number == toCheck[i]) return true;
-        return false;
     }
 
     public static boolean hasVoted(Reflex reflex, User user) {
@@ -132,5 +122,16 @@ public class MiscUtils {
             builder.append(Character.getName(s.charAt(i)));
         }
         return builder.toString();
+    }
+
+    @SafeVarargs
+    public static <K> boolean equalsAny(K type, K... types) {
+        for (K k : types)
+            if (type != null && type.equals(k)) return true;
+        return false;
+    }
+
+    public static String uppercaseFirst(String str) {
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 }
