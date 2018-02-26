@@ -1,15 +1,9 @@
 package me.blayyke.reflex.command.commands.fun;
 
-import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
-import me.blayyke.reflex.utils.AbstractCallback;
-import okhttp3.Response;
+import me.blayyke.reflex.command.ImageCommand;
 
-import java.io.IOException;
-import java.util.Objects;
-
-public class CommandDog extends AbstractCommand {
+public class CommandDog extends ImageCommand {
     @Override
     public CommandCategory getCategory() {
         return CommandCategory.FUN;
@@ -21,17 +15,17 @@ public class CommandDog extends AbstractCommand {
     }
 
     @Override
-    public String getDesc() {
-        return "Get a random picture of a dog";
+    public String getSiteUrl() {
+        return "https://random.dog";
     }
 
     @Override
-    public void execute(CommandContext context) {
-        getReflex().getHttpClient().get(new AbstractCallback() {
-            @Override
-            public void response(Response response) throws IOException {
-                context.getChannel().sendMessage(createEmbed().setTitle("Dog").setImage("https://random.dog/" + Objects.requireNonNull(response.body()).string()).build()).queue();
-            }
-        }, "https://random.dog/woof");
+    public String getAPIUrl() {
+        return getSiteUrl() + "/woof";
+    }
+
+    @Override
+    public String handle(String string) {
+        return "https://random.dog/" + string;
     }
 }

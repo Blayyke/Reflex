@@ -1,17 +1,10 @@
 package me.blayyke.reflex.command.commands.nsfw;
 
-import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
-import me.blayyke.reflex.utils.AbstractCallback;
-import net.dv8tion.jda.core.EmbedBuilder;
-import okhttp3.Response;
+import me.blayyke.reflex.command.ImageCommand;
 import org.json.JSONArray;
 
-import java.io.IOException;
-import java.util.Objects;
-
-public class CommandBoobs extends AbstractCommand {
+public class CommandBoobs extends ImageCommand {
     @Override
     public CommandCategory getCategory() {
         return CommandCategory.NSFW;
@@ -24,27 +17,21 @@ public class CommandBoobs extends AbstractCommand {
 
     @Override
     public String[] getAliases() {
-        return new String[]{"tits"};
+        return new String[]{"tits", "nude"};
     }
 
     @Override
-    public String getDesc() {
-        return "Get a random image of boobs";
+    public String getAPIUrl() {
+        return "http://api.oboobs.ru/noise/1/";
     }
 
     @Override
-    public void execute(CommandContext context) {
-        EmbedBuilder embedBuilder = createEmbed();
-        String url = "http://api.oboobs.ru/noise/1/";
-        getReflex().getHttpClient().get(new AbstractCallback() {
-            @Override
-            public void response(Response response) throws IOException {
-                String imageUrl = "http://media.oboobs.ru/" + new JSONArray(Objects.requireNonNull(response.body()).string()).getJSONObject(0).getString("preview");
+    public String getSiteUrl() {
+        return "http://oboobs.ru";
+    }
 
-                embedBuilder.setImage(imageUrl);
-                embedBuilder.setTitle("Image failed to load? Click here.", imageUrl);
-                context.getChannel().sendMessage(embedBuilder.build()).queue();
-            }
-        }, url);
+    @Override
+    public String handle(String string) {
+        return "http://media.oboobs.ru/" + new JSONArray(string).getJSONObject(0).getString("preview");
     }
 }
