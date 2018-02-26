@@ -34,7 +34,7 @@ public class BotStatsPoster {
             @Override
             public void response(Response response) {
                 if (!MiscUtils.equalsAny(response.code(), 200, 204))
-                    reflex.getLogger().info("Unexpected response code ({}) recieved for guild update on {}", response.code(), url);
+                    reflex.getLogger().info("Unexpected response code ({}) received for guild update on {}", response.code(), url);
                 else
                     reflex.getLogger().info("Updated bot stats for {} on shard {}.", url, postBody.getInt("shard_id"));
 
