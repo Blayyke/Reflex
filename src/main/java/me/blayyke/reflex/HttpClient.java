@@ -15,12 +15,13 @@ public class HttpClient {
     }
 
     public void get(AbstractCallback callback, String url) {
-        client.newCall(new Request.Builder().url(url).build()).enqueue(callback);
+        get(callback, url, new Headers.Builder().build());
     }
 
-    public Response getSync(String url) {
-        return getSync(url, new Headers.Builder().build());
+    public void get(AbstractCallback callback, String url, Headers headers) {
+        client.newCall(new Request.Builder().url(url).headers(headers).build()).enqueue(callback);
     }
+
 
     public Response getSync(String url, Headers headers) {
         try {
