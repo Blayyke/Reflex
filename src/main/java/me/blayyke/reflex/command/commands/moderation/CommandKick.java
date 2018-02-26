@@ -1,12 +1,12 @@
 package me.blayyke.reflex.command.commands.moderation;
 
-import me.blayyke.reflex.command.CommandPunishment;
+import me.blayyke.reflex.command.PunishmentCommand;
 import me.blayyke.reflex.utils.UserUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 
-public class CommandKick extends CommandPunishment {
+public class CommandKick extends PunishmentCommand {
     @Override
     public Permission[] getBotRequiredPermissions() {
         return new Permission[]{Permission.KICK_MEMBERS};

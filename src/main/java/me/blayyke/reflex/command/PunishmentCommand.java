@@ -9,7 +9,7 @@ import net.dv8tion.jda.core.entities.Member;
 
 import java.util.List;
 
-public abstract class CommandPunishment extends AbstractCommand {
+public abstract class PunishmentCommand extends AbstractCommand {
     @Override
     public void execute(CommandContext context) {
         EmbedBuilder embed = createEmbed(Colours.WARN);
