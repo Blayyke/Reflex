@@ -49,14 +49,16 @@ public class MineSweeperGame {
             return;
         }
         if (isTileBomb(x, y)) {
-            message.editMessage("You hit a bomb, game over!\n\n" + getFullBoard()).queue();
+            message.delete().queue();
+            message.getChannel().sendMessage("You hit a bomb, game over!\n\n" + getFullBoard()).queue();
             endGame();
             return;
         }
 
         uncoverTile(x, y);
         if (isBoardComplete()) {
-            message.editMessage("You completed the board, congratulations!\n\n" + getVisibleBoard()).queue();
+            message.delete().queue();
+            message.getChannel().sendMessage("You completed the board, congratulations!\n\n" + getVisibleBoard()).queue();
             endGame();
             return;
         }
