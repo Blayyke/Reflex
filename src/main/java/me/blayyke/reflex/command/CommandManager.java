@@ -55,7 +55,6 @@ public class CommandManager {
         commandMap.put(command.getName().toLowerCase(), command);
 
         for (String alias : command.getAliases()) aliasMap.put(alias.toLowerCase(), command);
-
         logger.info("Successfully loaded command {}!", command.getName());
     }
 
