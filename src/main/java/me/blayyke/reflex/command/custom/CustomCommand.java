@@ -23,6 +23,10 @@ public class CustomCommand extends AbstractCommand {
 
     private static final String FUNCTION_RANDOM = "function random() {\n\tif(arguments.length===0) return \"\";\nreturn arguments[Math.floor(Math.random() * arguments.length)];\n}";
     private static final String FUNCTION_RANDOM_NUMBER = "function random_number(maxNum) {\n\treturn Math.floor(Math.random() * maxNum) + 1;\n}";
+
+    private static final String LENGTH = "function length(input) {\n\treturn input.length();\n}";
+    private static final String LEN = "function len(input) {\n\treturn input.length();\n}";
+
     private CustomCommandType type;
 
     public CustomCommand(Reflex reflex, Guild guild, String name) {
@@ -40,7 +44,7 @@ public class CustomCommand extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         if (getAction() == null || getAction().isEmpty()) {
             context.getChannel().sendMessage("Action not set for this command. Please get an admin to set it with " + context.getPrefixUsed() + "custom action " + getName() + " <action>").queue();
             return;
@@ -54,7 +58,8 @@ public class CustomCommand extends AbstractCommand {
             context.getChannel().sendMessage(message).queue();
         } else if (type == CustomCommandType.ADVANCED) {
             try {
-                String code = FUNCTION_RANDOM + "\n" + FUNCTION_RANDOM_NUMBER + "\n" + getMainFunction(getAction());
+                String code = FUNCTION_RANDOM + "\n" + FUNCTION_RANDOM_NUMBER + "\n" + LEN + "\n" + LENGTH + "\n"
+                        + getMainFunction(getAction());
                 getReflex().getCustomCommandManager().getExecutionEngine().eval(code);
             } catch (ScriptException e) {
                 throw new RuntimeException(e);
