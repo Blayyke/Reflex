@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import static me.blayyke.reflex.utils.ParseUtils.LONG_PATTERN;
 
 public class MiscUtils {
+    public static final String ERROR = "\u26a0";
     private static Random random = new Random();
     private static final Pattern DOUBLE_PATTERN = Pattern.compile("^[0-9]+\\.?[0-9]*$");
 
