@@ -21,7 +21,7 @@ public class CommandPoints extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         long hashNumber = getReflex().getPointManager().getPoints(context.getMember().getUser());
         context.getChannel().sendMessage("You have " + hashNumber + " points.").queue();
     }

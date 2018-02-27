@@ -25,7 +25,7 @@ public class CommandLeave extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         EmbedBuilder embed = createEmbed(Colours.INFO).setTitle("Leave message");
         String message = getReflex().getDataManager().getGuildStorage(context.getGuild()).getLeaveMessage();
 

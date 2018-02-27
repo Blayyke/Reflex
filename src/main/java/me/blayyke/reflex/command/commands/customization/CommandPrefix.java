@@ -25,7 +25,7 @@ public class CommandPrefix extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         EmbedBuilder embed = createEmbed(Colours.INFO).setTitle("Prefix");
 
         if (context.hasArgs()) {

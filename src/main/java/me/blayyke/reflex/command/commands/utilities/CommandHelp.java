@@ -32,7 +32,7 @@ public class CommandHelp extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         if (!context.hasArgs()) {
             EmbedBuilder embed = createEmbed(Colours.INFO);
 

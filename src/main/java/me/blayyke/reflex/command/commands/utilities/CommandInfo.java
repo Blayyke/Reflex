@@ -27,7 +27,7 @@ public class CommandInfo extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         EmbedBuilder embedBuilder = createEmbed();
 
         embedBuilder.setTitle("Bot information / statistics");

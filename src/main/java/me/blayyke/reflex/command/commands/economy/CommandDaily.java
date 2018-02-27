@@ -24,7 +24,7 @@ public class CommandDaily extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         if (getReflex().getDBManager().keyExists(new KeyPointsCooldown(context.getMember().getUser()))) {
             context.getChannel().sendMessage("You have already gotten your daily points!").queue();
             return;

@@ -26,7 +26,7 @@ public class CommandFML extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         try {
             String address = "http://www.fmylife.com/random";
             Elements element = Jsoup.connect(address).get().select("div.panel-content");
@@ -40,5 +40,10 @@ public class CommandFML extends AbstractCommand {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public int getCooldown() {
+        return 5;
     }
 }

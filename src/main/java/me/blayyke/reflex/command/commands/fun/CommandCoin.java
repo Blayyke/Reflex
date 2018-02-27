@@ -28,7 +28,7 @@ public class CommandCoin extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         int random = MiscUtils.getRandom(100) + 1;
         EmbedBuilder embedBuilder = createEmbed();
 

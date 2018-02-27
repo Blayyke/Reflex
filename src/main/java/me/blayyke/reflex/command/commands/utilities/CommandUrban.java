@@ -35,7 +35,7 @@ public class CommandUrban extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         String query = MiscUtils.arrayToString(context.getArgs(), "+");
         String url = "http://api.urbandictionary.com/v0/define?term=" + query;
         AbstractCallback callback = new AbstractCallback() {
@@ -71,5 +71,10 @@ public class CommandUrban extends AbstractCommand {
         };
 
         getReflex().getHttpClient().get(callback, url);
+    }
+
+    @Override
+    public int getCooldown() {
+        return 3;
     }
 }

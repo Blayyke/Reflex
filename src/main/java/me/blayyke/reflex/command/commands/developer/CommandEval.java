@@ -46,7 +46,7 @@ public class CommandEval extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         if (!context.hasArgs()) {
             notEnoughArgs(context);
             return;
@@ -63,7 +63,7 @@ public class CommandEval extends AbstractCommand {
                             "})();");
             context.getChannel().sendMessage(out == null ? "Executed successfully." : out.toString()).queue();
         } catch (ScriptException e) {
-            context.getChannel().sendMessage(createEmbed(Colours.ERROR).setTitle("Failure!").setDescription("Failed to execute code.").build()).queue();
+            context.getChannel().sendMessage(createEmbed(Colours.ERROR).setTitle("Failure!").setDescription("Failed to onCommand code.").build()).queue();
             e.printStackTrace();
         }
     }

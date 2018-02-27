@@ -26,7 +26,7 @@ public class CommandInvite extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         context.getChannel().sendMessage("**Support guild**: https://discord.gg/h5V3c9s\n" +
                 "**Bot invite**: https://reflex-bot.github.io/invite").queue();
     }

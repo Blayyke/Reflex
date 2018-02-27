@@ -11,7 +11,7 @@ import java.util.List;
 
 public abstract class PunishmentCommand extends AbstractCommand {
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         EmbedBuilder embed = createEmbed(Colours.WARN);
 
         if (!context.hasArgs()) {

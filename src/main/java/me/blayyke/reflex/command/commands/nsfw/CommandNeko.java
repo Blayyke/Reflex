@@ -31,7 +31,7 @@ public class CommandNeko extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         String url = "https://nekos.brussell.me/api/v1/images/search";
         JSONObject payload = new JSONObject();
         payload.put("nsfw", true);
@@ -62,5 +62,10 @@ public class CommandNeko extends AbstractCommand {
                 context.getChannel().sendMessage(embedBuilder.build()).queue();
             }
         }, url, payload);
+    }
+
+    @Override
+    public int getCooldown() {
+        return 3;
     }
 }

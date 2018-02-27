@@ -36,7 +36,7 @@ public class CommandDanbooru extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         String url = "http://danbooru.donmai.us/posts.json?tags=" + MiscUtils.arrayToString(context.getArgs(), "_");
 
         getReflex().getHttpClient().get(new AbstractCallback() {

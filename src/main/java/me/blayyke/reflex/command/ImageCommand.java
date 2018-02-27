@@ -25,7 +25,7 @@ public abstract class ImageCommand extends AbstractCommand {
     }
 
     @Override
-    public final void execute(CommandContext context) {
+    public final void onCommand(CommandContext context) {
         EmbedBuilder embedBuilder = createEmbed();
 
         embedBuilder.setTitle(MiscUtils.uppercaseFirst(getName()), getSiteUrl());
@@ -43,5 +43,10 @@ public abstract class ImageCommand extends AbstractCommand {
                 response.close();
             }
         }, getAPIUrl());
+    }
+
+    @Override
+    public int getCooldown() {
+        return 3;
     }
 }

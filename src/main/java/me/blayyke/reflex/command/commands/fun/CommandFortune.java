@@ -29,7 +29,7 @@ public class CommandFortune extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         String url = "http://fortunecookieapi.herokuapp.com/v1/cookie";
         getReflex().getHttpClient().get(new AbstractCallback() {
             @Override
@@ -44,5 +44,10 @@ public class CommandFortune extends AbstractCommand {
                 context.getChannel().sendMessage(embedBuilder.build()).queue();
             }
         }, url);
+    }
+
+    @Override
+    public int getCooldown() {
+        return 5;
     }
 }

@@ -33,7 +33,7 @@ public class CommandMinesweeper extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         MineSweeperManager manager = getReflex().getDataManager().getGuildStorage(context.getGuild()).getMineSweeperManager();
         EmbedBuilder embedBuilder = createEmbed();
         embedBuilder.setTitle("Minesweeper");

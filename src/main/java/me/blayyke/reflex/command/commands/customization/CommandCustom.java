@@ -34,7 +34,7 @@ public class CommandCustom extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         if (!context.hasArgs()) {
             notEnoughArgs(context);
             return;

@@ -34,7 +34,7 @@ public class CommandDadJoke extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         String url = "https://icanhazdadjoke.com";
 
         getReflex().getHttpClient().get(new AbstractCallback() {
@@ -49,5 +49,10 @@ public class CommandDadJoke extends AbstractCommand {
                 context.getChannel().sendMessage(embed.build()).queue();
             }
         }, url, new Headers.Builder().add("Accept", "application/json").build());
+    }
+
+    @Override
+    public int getCooldown() {
+        return 5;
     }
 }

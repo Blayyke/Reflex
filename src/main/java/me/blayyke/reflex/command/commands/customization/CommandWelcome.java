@@ -30,7 +30,7 @@ public class CommandWelcome extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         EmbedBuilder embed = createEmbed(Colours.INFO).setTitle("Welcome message");
         String message = getReflex().getDataManager().getGuildStorage(context.getGuild()).getWelcomeMessage();
 

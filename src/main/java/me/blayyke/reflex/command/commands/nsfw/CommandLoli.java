@@ -31,7 +31,7 @@ public class CommandLoli extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         String url = "https://lolibooru.moe/post.json?tags=" + MiscUtils.arrayToString(context.getArgs(), "_");
         getReflex().getHttpClient().get(new AbstractCallback() {
             @Override

@@ -32,7 +32,7 @@ public class CommandGeoLocate extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         if (!context.hasArgs()) {
             notEnoughArgs(context);
             return;
@@ -46,5 +46,10 @@ public class CommandGeoLocate extends AbstractCommand {
                 context.getChannel().sendMessage(createEmbed().setTitle("IP Location").setDescription("The rough geographical location for that IP is " + bodyObj.getString("country_name") + "/" + bodyObj.getString("region_name") + "/" + bodyObj.getString("city")).build()).queue();
             }
         }, url);
+    }
+
+    @Override
+    public int getCooldown() {
+        return 3;
     }
 }

@@ -29,7 +29,7 @@ public class CommandGuildInfo extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         EmbedBuilder embedBuilder = createEmbed();
         Guild guild = context.getGuild();
 

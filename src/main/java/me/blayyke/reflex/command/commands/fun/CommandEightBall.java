@@ -34,7 +34,7 @@ public class CommandEightBall extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         EmbedBuilder embedBuilder = createEmbed();
         if (!context.hasArgs()) {
             embedBuilder.setColor(Colours.WARN);

@@ -23,7 +23,7 @@ public class CommandPing extends AbstractCommand {
     }
 
     @Override
-    public void execute(CommandContext context) {
+    public void onCommand(CommandContext context) {
         long startTime = System.currentTimeMillis();
         context.getChannel().sendMessage("Calculating ping...").queue(m -> {
             m.delete().queue();
