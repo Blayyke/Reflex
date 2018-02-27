@@ -110,7 +110,7 @@ public class CustomCommandManager {
             executionEngine.put("user", new BoxedUser(context.getMember()));
             executionEngine.put("args", context.getArgs());
             executionEngine.put("input", MiscUtils.arrayToString(context.getArgs(), " "));
-            command.execute(context);
+            command.onCommand(context);
         } catch (Exception e) {
             commandFailures++;
             logger.warn("[#{}] Custom Command {} failed in guild {} with args {}", commandFailures, command.getName(), context.getGuild().getId(), Arrays.toString(context.getArgs()));
