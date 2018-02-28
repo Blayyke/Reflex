@@ -26,6 +26,6 @@ public class PointManager {
     }
 
     public void setPoints(User user, long amount) {
-        reflex.getDBManager().set(new HKeyBalances(user), String.valueOf(amount));
+        reflex.getDBManager().hashSet(new HKeyBalances(user), String.valueOf(amount));
     }
 }
