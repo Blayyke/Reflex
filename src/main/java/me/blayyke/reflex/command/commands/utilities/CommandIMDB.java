@@ -1,0 +1,86 @@
+package me.blayyke.reflex.command.commands.utilities;
+
+import me.blayyke.reflex.command.AbstractCommand;
+import me.blayyke.reflex.command.CommandCategory;
+import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.utils.AbstractCallback;
+import me.blayyke.reflex.utils.MiscUtils;
+import net.dv8tion.jda.core.EmbedBuilder;
+import okhttp3.Response;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.Objects;
+
+public class CommandIMDB extends AbstractCommand {
+    @Override
+    public CommandCategory getCategory() {
+        return CommandCategory.UTILITIES;
+    }
+
+    @Override
+    public String getName() {
+        return "imdb";
+    }
+
+    @Override
+    public String getDesc() {
+        return "Get movie data from IMDB";
+    }
+
+    @Override
+    protected void onCommand(CommandContext context) {
+        String url = "http://www.omdbapi.com/?t=" + MiscUtils.arrayToString(context.getArgs(), "+") + "&apikey=" + getReflex().getDataManager().getSettings().getOMDBAuth();
+
+        getReflex().getHttpClient().get(new AbstractCallback() {
+            @Override
+            public void response(Response response) throws IOException {
+                JSONObject body = new JSONObject(Objects.requireNonNull(response.body()).string());
+                System.out.println(body.toString(2));
+
+                if (!body.getBoolean("Response")) {
+                    replyError(context, body.getString("Error"));
+                    return;
+                }
+
+                String title = body.getString("Title");
+                String rating = body.getString("Rated");
+                String releaseDate = body.getString("Released");
+                String runtime = body.getString("Runtime");
+                String genres = body.getString("Genre");
+                String plot = body.getString("Plot");
+                String language = body.getString("Language");
+                String posterImg = body.getString("Poster");
+                String metascore = body.getString("Metascore");
+                String imdbRating = body.getString("imdbRating");
+                String imdbVotes = body.getString("imdbVotes");
+                String imdbID = body.getString("imdbID");
+
+                EmbedBuilder embed = createEmbed();
+
+                embed.setTitle(title);
+                embed.setImage(posterImg);
+                embed.setDescription(plot);
+
+                embed.addField("Release", releaseDate, true);
+                embed.addField("Rated", rating, true);
+
+                embed.addField("Metascore", metascore, true);
+                embed.addField("Rating", imdbRating, true);
+
+                embed.addField("Votes", imdbVotes, true);
+                embed.addField("Runtime", runtime, true);
+
+                embed.addField("Genre(s)", genres, true);
+                embed.addField("Language", language, true);
+
+                context.getChannel().sendMessage(embed.build()).queue();
+            }
+        }, url);
+    }
+
+    @Override
+    public int getRequiredArgs() {
+        return 1;
+    }
+}
