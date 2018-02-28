@@ -38,4 +38,9 @@ public class CommandSoftBan extends PunishmentCommand {
     public String getDesc() {
         return "Soft-ban a member from the server";
     }
+
+    @Override
+    public int getRequiredArgs() {
+        return 1;
+    }
 }

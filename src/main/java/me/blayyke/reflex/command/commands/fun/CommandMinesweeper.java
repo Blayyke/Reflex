@@ -127,4 +127,9 @@ public class CommandMinesweeper extends AbstractCommand {
         if (context.getGuild().getSelfMember().hasPermission(context.getChannel(), Permission.MESSAGE_MANAGE))
             context.getMessage().delete().queue();
     }
+
+    @Override
+    public int getRequiredArgs() {
+        return 2;
+    }
 }

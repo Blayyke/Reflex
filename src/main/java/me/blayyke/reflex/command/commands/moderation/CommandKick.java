@@ -36,4 +36,9 @@ public class CommandKick extends PunishmentCommand {
     public String getDesc() {
         return "Kick a member from the server";
     }
+
+    @Override
+    public int getRequiredArgs() {
+        return 1;
+    }
 }

@@ -36,4 +36,9 @@ public class CommandBan extends PunishmentCommand {
     public String getDesc() {
         return "Ban a member from the server";
     }
+
+    @Override
+    public int getRequiredArgs() {
+        return 1;
+    }
 }

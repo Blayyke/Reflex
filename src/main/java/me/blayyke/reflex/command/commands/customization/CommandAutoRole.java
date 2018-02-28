@@ -58,19 +58,16 @@ public class CommandAutoRole extends AbstractCommand {
 
         List<Role> foundRoles = ParseUtils.getRoles(context.getGuild(), input);
         if (foundRoles.isEmpty()) {
-            embedBuilder.setDescription("I couldn't find a role with your input. This can be provided by either a role id, mention or name.");
-            context.getChannel().sendMessage(embedBuilder.build()).queue();
+            replyError(context, "No role found with your input.");
             return;
         } else if (foundRoles.size() > 1) {
-            embedBuilder.setDescription("I found more than one role. Please provide a role by either a role id or mention.");
-            context.getChannel().sendMessage(embedBuilder.build()).queue();
+            replyError(context, "More than one role was found with the provided input. Please be more specific (ID or mention).");
             return;
         }
 
         Role newRole = foundRoles.get(0);
         if (!context.getGuild().getSelfMember().canInteract(newRole)) {
-            embedBuilder.setDescription("I do not have permissions to apply that role. Is it higher than my highest role?");
-            context.getChannel().sendMessage(embedBuilder.build()).queue();
+            replyError(context, "I do not have permissions to apply that role. Is it higher than my highest role?");
             return;
         }
 

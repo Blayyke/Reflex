@@ -1,6 +1,5 @@
 package me.blayyke.reflex.command.commands.fun;
 
-import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
 import me.blayyke.reflex.command.CommandContext;
@@ -36,16 +35,13 @@ public class CommandEightBall extends AbstractCommand {
     @Override
     public void onCommand(CommandContext context) {
         EmbedBuilder embedBuilder = createEmbed();
-        if (!context.hasArgs()) {
-            embedBuilder.setColor(Colours.WARN);
-            embedBuilder.setTitle("No question");
-            embedBuilder.setDescription("I can't answer a question if you don't give me one...");
-
-            context.getChannel().sendMessage(embedBuilder.build()).queue();
-            return;
-        }
         embedBuilder.setTitle("8-ball");
         embedBuilder.setDescription("\uD83C\uDFB1: " + responses[MiscUtils.getRandom(responses.length - 1)]);
         context.getChannel().sendMessage(embedBuilder.build()).queue();
+    }
+
+    @Override
+    public int getRequiredArgs() {
+        return 1;
     }
 }

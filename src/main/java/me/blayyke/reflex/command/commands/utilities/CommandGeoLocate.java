@@ -33,11 +33,6 @@ public class CommandGeoLocate extends AbstractCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if (!context.hasArgs()) {
-            notEnoughArgs(context);
-            return;
-        }
-
         String url = "https://freegeoip.net/json/" + context.getArgs()[0];
         getReflex().getHttpClient().get(new AbstractCallback() {
             @Override
@@ -51,5 +46,10 @@ public class CommandGeoLocate extends AbstractCommand {
     @Override
     public int getCooldown() {
         return 3;
+    }
+
+    @Override
+    public int getRequiredArgs() {
+        return 1;
     }
 }

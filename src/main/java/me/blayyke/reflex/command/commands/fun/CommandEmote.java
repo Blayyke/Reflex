@@ -34,11 +34,6 @@ public class CommandEmote extends AbstractCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if (!context.hasArgs()) {
-            notEnoughArgs(context);
-            return;
-        }
-
         EmbedBuilder embedBuilder = createEmbed();
         List<Emote> emoteList = ParseUtils.getEmotes(getReflex().getShardManager(), context.getArgs()[0]);
         if (emoteList.isEmpty()) {
@@ -63,5 +58,10 @@ public class CommandEmote extends AbstractCommand {
         }
 
         context.getChannel().sendMessage(createEmbed().setTitle(emoteList.get(0).getName()).setImage(emoteList.get(0).getImageUrl()).build()).queue();
+    }
+
+    @Override
+    public int getRequiredArgs() {
+        return 1;
     }
 }

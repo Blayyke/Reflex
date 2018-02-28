@@ -77,4 +77,9 @@ public class CommandUrban extends AbstractCommand {
     public int getCooldown() {
         return 3;
     }
+
+    @Override
+    public int getRequiredArgs() {
+        return 1;
+    }
 }

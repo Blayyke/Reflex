@@ -44,6 +44,10 @@ public abstract class AbstractCommand {
     public abstract String getDesc();
 
     public final void execute(CommandContext context) {
+        if (context.getArgs().length < getRequiredArgs()) {
+            replyError(context, "This command requires at least " + getRequiredArgs() + " arguments.");
+            return;
+        }
         if (hasCooldown(context.getMember().getUser())) {
             replyError(context, "Please wait " + getRemainingCooldown(context.getMember().getUser()) + " seconds before executing this command.");
             return;
@@ -84,16 +88,16 @@ public abstract class AbstractCommand {
         return createEmbed().setColor(colour);
     }
 
-    protected void notEnoughArgs(CommandContext context) {
-        context.getChannel().sendMessage(createEmbed(Colours.WARN).setTitle("Not enough arguments").setDescription("This command requires one or more arguments!").build()).queue();
-    }
-
     /**
      * The cooldown, in seconds, before this command can be executed again.
      *
      * @return The cooldown before this command can be used again.
      */
     public int getCooldown() {
+        return 0;
+    }
+
+    public int getRequiredArgs() {
         return 0;
     }
 }

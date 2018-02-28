@@ -34,11 +34,6 @@ public class CommandModLogs extends AbstractCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if (!context.hasArgs()) {
-            notEnoughArgs(context);
-            return;
-        }
-
         List<TextChannel> channels = ParseUtils.getTextChannels(context.getGuild(), MiscUtils.arrayToString(context.getArgs(), "-"));
         EmbedBuilder embed = createEmbed();
         embed.setTitle("Mod-Logs");
@@ -60,5 +55,10 @@ public class CommandModLogs extends AbstractCommand {
         embed.setDescription("The mod-logs channel has been set to " + channel.getAsMention());
 
         context.getChannel().sendMessage(embed.build()).queue();
+    }
+
+    @Override
+    public int getRequiredArgs() {
+        return 1;
     }
 }

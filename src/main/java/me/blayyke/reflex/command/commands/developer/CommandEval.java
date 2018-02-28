@@ -47,11 +47,6 @@ public class CommandEval extends AbstractCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if (!context.hasArgs()) {
-            notEnoughArgs(context);
-            return;
-        }
-
         engine.put("context", context);
 
         try {

@@ -34,16 +34,10 @@ public class CommandAnnouncer extends AbstractCommand {
         if (context.hasArgs()) {
             List<TextChannel> channels = ParseUtils.getTextChannels(context.getGuild(), context.getArgs()[0]);
             if (channels.isEmpty()) {
-                embed.setDescription("No channel was found for your input. ");
-
-                context.getChannel().sendMessage(embed.build()).queue();
+                replyError(context, "No channel found with your input.");
                 return;
             } else if (channels.size() > 1) {
-                embed.setColor(Colours.WARN);
-                embed.setTitle("Too many found");
-                embed.setDescription("More than one channel was found using your input. Please provide a channel id or mention instead");
-
-                context.getChannel().sendMessage(embed.build()).queue();
+                replyError(context, "More than one channel was found with the provided input. Please be more specific (ID or mention).");
                 return;
             }
 

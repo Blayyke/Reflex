@@ -35,27 +35,16 @@ public class CommandCustom extends AbstractCommand {
 
     @Override
     public void onCommand(CommandContext context) {
-        if (!context.hasArgs()) {
-            notEnoughArgs(context);
-            return;
-        }
-
         EmbedBuilder embed = createEmbed();
 
         switch (context.getArgs()[0].toLowerCase()) {
             case "create":
                 if (getReflex().getCustomCommandManager().commandExists(context.getGuild(), context.getArgs()[1])) {
-                    embed.setTitle("Command already exists");
-                    embed.setDescription("I could not create that command as one already exists with that name. \n" +
-                            "If you want to delete the other command, run `" + getReflex().getDataManager().getGuildStorage(context.getGuild()).getPrefix() + context.getAlias() + " delete <name>`.");
-
-                    context.getChannel().sendMessage(embed.build()).queue();
+                    replyError(context, "A command already exists with that name. If you would like to delete this command, use `" + context.getPrefixUsed() + context.getAlias() + " delete <name>.");
                     return;
                 }
                 if (getReflex().getCommandManager().getCommand(context.getArgs()[1]) != null) {
-                    embed.setTitle("Command already exists");
-                    embed.setDescription("I could not create that command as an inbuilt command already exists with that name. Please rerun this command with a different name.");
-                    context.getChannel().sendMessage(embed.build()).queue();
+                    replyError(context, "A default command already exists with that name. Please use another name.");
                     return;
                 }
 
@@ -66,10 +55,6 @@ public class CommandCustom extends AbstractCommand {
                 context.getChannel().sendMessage(embed.setTitle("Created command").setDescription("Successfully created command `" + command.getName() + "`.").build()).queue();
                 break;
             case "action": {
-                if (context.getArgs().length < 2) {
-                    notEnoughArgs(context);
-                    return;
-                }
                 String s = context.getArgs()[1];
                 CustomCommand c = getReflex().getCustomCommandManager().getCommand(context.getGuild(), s);
                 if (c == null) {
@@ -84,10 +69,6 @@ public class CommandCustom extends AbstractCommand {
             }
             case "description":
             case "desc": {
-                if (context.getArgs().length < 2) {
-                    notEnoughArgs(context);
-                    return;
-                }
                 String s = context.getArgs()[1];
                 CustomCommand c = getReflex().getCustomCommandManager().getCommand(context.getGuild(), s);
                 if (c == null) {
@@ -100,10 +81,6 @@ public class CommandCustom extends AbstractCommand {
                 break;
             }
             case "delete": {
-                if (context.getArgs().length < 2) {
-                    notEnoughArgs(context);
-                    return;
-                }
                 String s = context.getArgs()[1];
                 CustomCommand c = getReflex().getCustomCommandManager().getCommand(context.getGuild(), s);
                 if (c == null) {
@@ -119,10 +96,6 @@ public class CommandCustom extends AbstractCommand {
             }
             case "mode":
             case "type": {
-                if (context.getArgs().length < 2) {
-                    notEnoughArgs(context);
-                    return;
-                }
                 String s = context.getArgs()[1];
                 CustomCommand c = getReflex().getCustomCommandManager().getCommand(context.getGuild(), s);
                 if (c == null) {
@@ -134,7 +107,7 @@ public class CommandCustom extends AbstractCommand {
 
                 if (customCommandType == null) {
                     embed.setTitle("Invalid type");
-                    embed.setDescription("`" + MiscUtils.escapeFormatting(context.getArgs()[2]) + "` is not a valid custom command type. \nValid types are: " + MiscUtils.arrayToString(CustomCommandType.values(), ", "));
+                    replyError(context, "`" + MiscUtils.escapeFormatting(context.getArgs()[2]) + "` is not a valid command type. Valid types are: " + MiscUtils.arrayToString(CustomCommandType.values(), ", "));
 
                     context.getChannel().sendMessage(embed.build()).queue();
                     return;
@@ -155,6 +128,11 @@ public class CommandCustom extends AbstractCommand {
                 break;
         }
 
+    }
+
+    @Override
+    public int getRequiredArgs() {
+        return 2;
     }
 
     private void commandNotFound(CommandContext context) {

@@ -14,11 +14,6 @@ public abstract class PunishmentCommand extends AbstractCommand {
     public void onCommand(CommandContext context) {
         EmbedBuilder embed = createEmbed(Colours.WARN);
 
-        if (!context.hasArgs()) {
-            notEnoughArgs(context);
-            return;
-        }
-
         List<Member> members = ParseUtils.findMembers(context.getGuild(), MiscUtils.arrayToString(context.getArgs(), " "));
         if (members.isEmpty()) {
             embed.setTitle("None found");
@@ -55,4 +50,9 @@ public abstract class PunishmentCommand extends AbstractCommand {
     public abstract Permission[] getBotRequiredPermissions();
 
     public abstract EmbedBuilder applyPunishment(EmbedBuilder embed, Member member, Member requester);
+
+    @Override
+    public int getRequiredArgs() {
+        return 1;
+    }
 }
