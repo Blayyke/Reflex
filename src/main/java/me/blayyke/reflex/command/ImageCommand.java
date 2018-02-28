@@ -1,7 +1,7 @@
 package me.blayyke.reflex.command;
 
 import me.blayyke.reflex.utils.AbstractCallback;
-import me.blayyke.reflex.utils.MiscUtils;
+import me.blayyke.reflex.utils.TextUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import okhttp3.Response;
 
@@ -28,7 +28,7 @@ public abstract class ImageCommand extends AbstractCommand {
     public final void onCommand(CommandContext context) {
         EmbedBuilder embedBuilder = createEmbed();
 
-        embedBuilder.setTitle(MiscUtils.uppercaseFirst(getName()), getSiteUrl());
+        embedBuilder.setTitle(TextUtils.uppercaseFirst(getName()), getSiteUrl());
         get(receive -> {
             embedBuilder.setImage(receive);
             context.getChannel().sendMessage(embedBuilder.build()).queue();

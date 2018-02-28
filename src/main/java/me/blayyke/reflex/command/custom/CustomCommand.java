@@ -9,6 +9,7 @@ import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldCreator;
 import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldDesc;
 import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldType;
 import me.blayyke.reflex.utils.MiscUtils;
+import me.blayyke.reflex.utils.TextUtils;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 
@@ -31,7 +32,7 @@ public class CustomCommand extends AbstractCommand {
 
     public CustomCommand(Reflex reflex, Guild guild, String name) {
         if (guild == null || name == null || name.isEmpty()) throw new IllegalArgumentException("invalid arguments");
-        if (!MiscUtils.isAllLetters(name))
+        if (!TextUtils.isAllLetters(name))
             throw new IllegalArgumentException("name cannot contain non-alphabetic characters");
         this.guild = guild;
         this.name = name;

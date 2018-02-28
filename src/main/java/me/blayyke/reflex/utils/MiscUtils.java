@@ -35,10 +35,6 @@ public class MiscUtils {
         return builder.toString();
     }
 
-    public static boolean isAllLetters(CharSequence charSequence) {
-        return charSequence.chars().allMatch(Character::isLetter);
-    }
-
     public static String arrayToString(Enum[] args, String separator) {
         String[] strArgs = new String[args.length];
         for (int i = 0; i < args.length; i++) strArgs[i] = args[i].name().toLowerCase();
@@ -56,14 +52,6 @@ public class MiscUtils {
 
     public static boolean isDouble(String s) {
         return s != null && DOUBLE_PATTERN.matcher(s).matches();
-    }
-
-    public static String escapeFormatting(String prefix) {
-        if (prefix == null) return null;
-        return prefix
-                .replace("`", "\\`")
-                .replace("*", "\\*")
-                .replace("_", "\\_");
     }
 
     public static String formatStringUser(String string, User user) {
@@ -130,9 +118,5 @@ public class MiscUtils {
         for (K k : types)
             if (type != null && type.equals(k)) return true;
         return false;
-    }
-
-    public static String uppercaseFirst(String str) {
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 }

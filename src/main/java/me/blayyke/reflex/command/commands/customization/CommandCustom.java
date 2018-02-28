@@ -7,6 +7,7 @@ import me.blayyke.reflex.command.CommandContext;
 import me.blayyke.reflex.command.custom.CustomCommand;
 import me.blayyke.reflex.command.custom.CustomCommandType;
 import me.blayyke.reflex.utils.MiscUtils;
+import me.blayyke.reflex.utils.TextUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 
@@ -107,7 +108,7 @@ public class CommandCustom extends AbstractCommand {
 
                 if (customCommandType == null) {
                     embed.setTitle("Invalid type");
-                    replyError(context, "`" + MiscUtils.escapeFormatting(context.getArgs()[2]) + "` is not a valid command type. Valid types are: " + MiscUtils.arrayToString(CustomCommandType.values(), ", "));
+                    replyError(context, "`" + TextUtils.escapeFormatting(context.getArgs()[2]) + "` is not a valid command type. Valid types are: " + MiscUtils.arrayToString(CustomCommandType.values(), ", "));
 
                     context.getChannel().sendMessage(embed.build()).queue();
                     return;
