@@ -11,35 +11,29 @@ import java.util.List;
 
 public abstract class PunishmentCommand extends AbstractCommand {
     @Override
-    public void onCommand(CommandContext context) {
+    public void onCommand(CommandEnvironment env) {
         EmbedBuilder embed = createEmbed(Colours.WARN);
 
-        List<Member> members = ParseUtils.findMembers(context.getGuild(), MiscUtils.arrayToString(context.getArgs(), " "));
-        if (members.isEmpty()) {
-            embed.setTitle("None found");
-            embed.setDescription("No members were found! Members can be provided by mention, discord ID or discord tag (Name#1111).");
-        } else if (members.size() > 1) {
-            embed.setTitle("Multiple found");
-            embed.setDescription("Multiple users were found with your search. Please either use a mention, discord ID or discord tag (Name#1111).");
-        } else {
-            Member member = members.get(0);
-            if (!context.getGuild().getSelfMember().canInteract(member)) {
-                embed.setTitle("Hierarchy error");
-                embed.setDescription("That user cannot be banned their highest role is higher than the bots highest, or they own the server.");
-            } else if (!context.getGuild().getSelfMember().hasPermission(getBotRequiredPermissions())) {
-                String[] perms = new String[getBotRequiredPermissions().length];
-                for (int i = 0; i < getBotRequiredPermissions().length; i++)
-                    perms[i] = getBotRequiredPermissions()[i].getName();
+        List<Member> members = ParseUtils.findMembers(env.getGuild(), MiscUtils.arrayToString(env.getArgs(), " "));
+        if (!handleMemberList(env, members)) return;
+        Member member = members.get(0);
+        if (!env.getGuild().getSelfMember().canInteract(member)) {
+            embed.setTitle("Hierarchy error");
+            embed.setDescription("That user cannot be banned their highest role is higher than the bots highest, or they own the server.");
+        } else if (!env.getGuild().getSelfMember().hasPermission(getBotRequiredPermissions())) {
+            String[] perms = new String[getBotRequiredPermissions().length];
+            for (int i = 0; i < getBotRequiredPermissions().length; i++)
+                perms[i] = getBotRequiredPermissions()[i].getName();
 
-                embed.setTitle("Invalid perms");
-                embed.setDescription("The bot does not have the required permissions to use this command. Required permission(s): " + MiscUtils.arrayToString(perms, " ") + ". ");
-            } else {
-                embed.setColor(Colours.INFO);
-                embed = applyPunishment(embed, member, context.getMember());
-            }
+            embed.setTitle("Invalid perms");
+            embed.setDescription("The bot does not have the required permissions to use this command. Required permission(s): " + MiscUtils.arrayToString(perms, " ") + ". ");
+        } else {
+            embed.setColor(Colours.INFO);
+            embed = applyPunishment(embed, member, env.getMember());
         }
 
-        context.getChannel().sendMessage(embed.build()).queue();
+        env.getChannel().sendMessage(embed.build()).queue();
+
     }
 
     @Override

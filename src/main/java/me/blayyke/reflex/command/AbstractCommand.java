@@ -5,11 +5,15 @@ import me.blayyke.reflex.Reflex;
 import me.blayyke.reflex.utils.MiscUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 
 import java.awt.*;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractCommand {
@@ -43,7 +47,7 @@ public abstract class AbstractCommand {
 
     public abstract String getDesc();
 
-    public final void execute(CommandContext context) {
+    public final void execute(CommandEnvironment context) {
         if (context.getArgs().length < getRequiredArgs()) {
             replyError(context, "This command requires at least " + getRequiredArgs() + " arguments.");
             return;
@@ -57,7 +61,7 @@ public abstract class AbstractCommand {
         activateCooldown(context.getMember().getUser());
     }
 
-    public void replyError(CommandContext context, String s) {
+    public void replyError(CommandEnvironment context, String s) {
         context.getChannel().sendMessage(MiscUtils.ERROR + " " + s).queue();
     }
 
@@ -76,12 +80,75 @@ public abstract class AbstractCommand {
         return Math.toIntExact(((started + (getCooldown() * 1000) - current) / 1000) + 1);
     }
 
-    protected abstract void onCommand(CommandContext context);
+    protected abstract void onCommand(CommandEnvironment env);
 
     public static EmbedBuilder createEmbed() {
         return new EmbedBuilder()
                 .setColor(Colours.INFO)
                 .setTimestamp(Instant.ofEpochMilli(System.currentTimeMillis()));
+    }
+
+    /**
+     * Handle a list of members. Sends an error if none or multiple were found.
+     *
+     * @param env  The {@link me.blayyke.reflex.command.CommandEnvironment}
+     * @param list The list of members to check.
+     * @return True if the list contains only a single member.
+     */
+    protected boolean handleMemberList(CommandEnvironment env, List<Member> list) {
+        if (list == null) {
+            replyError(env, "Something went wrong (null list)!");
+            return false;
+        } else if (list.isEmpty()) {
+            replyError(env, "No members were found with your input. Accepted inputs are either username, discord ID, discord tag(name#9999) or mention.");
+            return false;
+        } else if (list.size() > 1) {
+            replyError(env, "Multiple members were found with your input. Please be more specific (DiscordTag, ID or mention).");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Handle a list of members. Sends an error if none or multiple were found.
+     *
+     * @param env  The {@link me.blayyke.reflex.command.CommandEnvironment}
+     * @param list The list of members to check.
+     * @return True if the list contains only a single member.
+     */
+    protected boolean handleChannelList(CommandEnvironment env, List<TextChannel> list) {
+        if (list == null) {
+            replyError(env, "Something went wrong (null list)!");
+            return false;
+        } else if (list.isEmpty()) {
+            replyError(env, "No channels were found with your input. Accepted inputs are either name, ID, or mention.");
+            return false;
+        } else if (list.size() > 1) {
+            replyError(env, "Multiple channels were found with your input. Please be more specific (ID or mention).");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Handle a list of members. Sends an error if none or multiple were found.
+     *
+     * @param env  The {@link me.blayyke.reflex.command.CommandEnvironment}
+     * @param list The list of members to check.
+     * @return True if the list contains only a single member.
+     */
+    protected boolean handleRoleList(CommandEnvironment env, List<Role> list) {
+        if (list == null) {
+            replyError(env, "Something went wrong (null list)!");
+            return false;
+        } else if (list.isEmpty()) {
+            replyError(env, "No members were found with your input. Accepted inputs are either username, discord ID, discord tag(name#9999) or mention.");
+            return false;
+        } else if (list.size() > 1) {
+            replyError(env, "Multiple members were found with your input. Please be more specific (DiscordTag, ID or mention).");
+            return false;
+        }
+        return true;
     }
 
     public static EmbedBuilder createEmbed(Color colour) {
