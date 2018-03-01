@@ -100,7 +100,7 @@ public abstract class AbstractCommand {
             replyError(env, "Something went wrong (null list)!");
             return false;
         } else if (list.isEmpty()) {
-            replyError(env, "No members were found with your input. Accepted inputs are either username, discord ID, discord tag(name#9999) or mention.");
+            replyError(env, "No members were found with your input. Accepted inputs are either username, ID, DiscordTag(Name#9999) or mention.");
             return false;
         } else if (list.size() > 1) {
             replyError(env, "Multiple members were found with your input. Please be more specific (DiscordTag, ID or mention).");
@@ -121,7 +121,7 @@ public abstract class AbstractCommand {
             replyError(env, "Something went wrong (null list)!");
             return false;
         } else if (list.isEmpty()) {
-            replyError(env, "No channels were found with your input. Accepted inputs are either name, ID, or mention.");
+            replyError(env, "No channels were found with your input. Accepted inputs are either name, ID or mention.");
             return false;
         } else if (list.size() > 1) {
             replyError(env, "Multiple channels were found with your input. Please be more specific (ID or mention).");
@@ -142,10 +142,10 @@ public abstract class AbstractCommand {
             replyError(env, "Something went wrong (null list)!");
             return false;
         } else if (list.isEmpty()) {
-            replyError(env, "No members were found with your input. Accepted inputs are either username, discord ID, discord tag(name#9999) or mention.");
+            replyError(env, "No roles were found with your input. Accepted inputs are either name, ID or mention.");
             return false;
         } else if (list.size() > 1) {
-            replyError(env, "Multiple members were found with your input. Please be more specific (DiscordTag, ID or mention).");
+            replyError(env, "Multiple roles were found with your input. Please be more specific (ID or mention).");
             return false;
         }
         return true;
