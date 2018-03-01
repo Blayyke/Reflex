@@ -116,7 +116,7 @@ public class CommandManager {
         }
 
         try {
-            command.execute(new CommandContext(event.getMessage(), event.getMember(), reflex, event.getJDA(), event.getGuild(), commandName, args, prefixUsed));
+            command.execute(new CommandEnvironment(event.getMessage(), event.getMember(), reflex, event.getJDA(), event.getGuild(), commandName, args, prefixUsed));
         } catch (Exception e) {
             commandFailures++;
             logger.warn("[#{}] Command {} failed in guild {} with args {}", commandFailures, command.getName(), event.getGuild().getId(), Arrays.toString(args));

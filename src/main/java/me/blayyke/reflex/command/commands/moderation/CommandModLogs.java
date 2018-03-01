@@ -3,7 +3,7 @@ package me.blayyke.reflex.command.commands.moderation;
 import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 import me.blayyke.reflex.utils.MiscUtils;
 import me.blayyke.reflex.utils.ParseUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -33,8 +33,8 @@ public class CommandModLogs extends AbstractCommand {
     }
 
     @Override
-    public void onCommand(CommandContext context) {
-        List<TextChannel> channels = ParseUtils.getTextChannels(context.getGuild(), MiscUtils.arrayToString(context.getArgs(), "-"));
+    public void onCommand(CommandEnvironment env) {
+        List<TextChannel> channels = ParseUtils.getTextChannels(env.getGuild(), MiscUtils.arrayToString(env.getArgs(), "-"));
         EmbedBuilder embed = createEmbed();
         embed.setTitle("Mod-Logs");
 
@@ -50,11 +50,11 @@ public class CommandModLogs extends AbstractCommand {
         }
 
         TextChannel channel = channels.get(0);
-        getReflex().getDataManager().getGuildStorage(context.getGuild()).setModLogChannel(channel);
+        getReflex().getDataManager().getGuildStorage(env.getGuild()).setModLogChannel(channel);
 
         embed.setDescription("The mod-logs channel has been set to " + channel.getAsMention());
 
-        context.getChannel().sendMessage(embed.build()).queue();
+        env.getChannel().sendMessage(embed.build()).queue();
     }
 
     @Override

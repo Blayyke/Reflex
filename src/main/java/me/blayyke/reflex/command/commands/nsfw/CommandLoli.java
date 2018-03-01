@@ -3,7 +3,7 @@ package me.blayyke.reflex.command.commands.nsfw;
 import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 import me.blayyke.reflex.utils.AbstractCallback;
 import me.blayyke.reflex.utils.MiscUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -31,8 +31,8 @@ public class CommandLoli extends AbstractCommand {
     }
 
     @Override
-    public void onCommand(CommandContext context) {
-        String url = "https://lolibooru.moe/post.json?tags=" + MiscUtils.arrayToString(context.getArgs(), "_");
+    public void onCommand(CommandEnvironment env) {
+        String url = "https://lolibooru.moe/post.json?tags=" + MiscUtils.arrayToString(env.getArgs(), "_");
         getReflex().getHttpClient().get(new AbstractCallback() {
             @Override
             public void response(Response response) throws IOException {
@@ -44,7 +44,7 @@ public class CommandLoli extends AbstractCommand {
                     embedBuilder.setColor(Colours.WARN);
                     embedBuilder.setDescription("No posts were found with your specified tags.");
 
-                    context.getChannel().sendMessage(embedBuilder.build()).queue();
+                    env.getChannel().sendMessage(embedBuilder.build()).queue();
                     return;
                 }
 
@@ -53,7 +53,7 @@ public class CommandLoli extends AbstractCommand {
                 embedBuilder.setImage(jsonObject.getString("preview_url"));
                 embedBuilder.setDescription("Click [here](" + jsonObject.getString("source") + ") for source");
 
-                context.getChannel().sendMessage(embedBuilder.build()).queue();
+                env.getChannel().sendMessage(embedBuilder.build()).queue();
             }
         }, url);
     }

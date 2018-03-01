@@ -7,7 +7,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
-public class CommandContext {
+public class CommandEnvironment {
     private final Message message;
     private final Member member;
     private final Reflex reflex;
@@ -17,7 +17,7 @@ public class CommandContext {
     private final String alias;
     private final String prefixUsed;
 
-    public CommandContext(Message message, Member member, Reflex reflex, JDA jda, Guild guild, String alias, String[] args, String prefixUsed) {
+    public CommandEnvironment(Message message, Member member, Reflex reflex, JDA jda, Guild guild, String alias, String[] args, String prefixUsed) {
         this.message = message;
         this.member = member;
         this.reflex = reflex;

@@ -2,7 +2,7 @@ package me.blayyke.reflex.command.commands.utilities;
 
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 import net.dv8tion.jda.core.EmbedBuilder;
 
 public class CommandInfo extends AbstractCommand {
@@ -27,7 +27,7 @@ public class CommandInfo extends AbstractCommand {
     }
 
     @Override
-    public void onCommand(CommandContext context) {
+    public void onCommand(CommandEnvironment env) {
         EmbedBuilder embedBuilder = createEmbed();
 
         embedBuilder.setTitle("Bot information / statistics");
@@ -44,6 +44,6 @@ public class CommandInfo extends AbstractCommand {
         embedBuilder.addField("Channel Categories", String.valueOf(getReflex().getShardManager().getCategories().size()), true);
         embedBuilder.addBlankField(true);
 
-        context.getChannel().sendMessage(embedBuilder.build()).queue();
+        env.getChannel().sendMessage(embedBuilder.build()).queue();
     }
 }

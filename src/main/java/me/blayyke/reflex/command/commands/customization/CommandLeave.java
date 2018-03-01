@@ -3,7 +3,7 @@ package me.blayyke.reflex.command.commands.customization;
 import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 import me.blayyke.reflex.database.keys.guild.KeyLeaveMessage;
 import me.blayyke.reflex.utils.MiscUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -25,23 +25,23 @@ public class CommandLeave extends AbstractCommand {
     }
 
     @Override
-    public void onCommand(CommandContext context) {
+    public void onCommand(CommandEnvironment env) {
         EmbedBuilder embed = createEmbed(Colours.INFO).setTitle("Leave message");
-        String message = getReflex().getDataManager().getGuildStorage(context.getGuild()).getLeaveMessage();
+        String message = getReflex().getDataManager().getGuildStorage(env.getGuild()).getLeaveMessage();
 
-        if (context.hasArgs()) {
+        if (env.hasArgs()) {
             embed.setDescription("The leave message has been updated.");
             embed.addField("Old leave message", message == null ? "None set." : message, true);
 
-            message = MiscUtils.arrayToString(context.getArgs(), " ");
-            getReflex().getDBManager().set(new KeyLeaveMessage(context.getGuild()), MiscUtils.equalsAny(message, "none", "off", "disable", "nothing") ? null : message);
-            message = getReflex().getDataManager().getGuildStorage(context.getGuild()).getLeaveMessage();
+            message = MiscUtils.arrayToString(env.getArgs(), " ");
+            getReflex().getDBManager().set(new KeyLeaveMessage(env.getGuild()), MiscUtils.equalsAny(message, "none", "off", "disable", "nothing") ? null : message);
+            message = getReflex().getDataManager().getGuildStorage(env.getGuild()).getLeaveMessage();
             embed.addField("New leave message", message == null ? "None set." : message, true);
 
-            context.getChannel().sendMessage(embed.build()).queue();
+            env.getChannel().sendMessage(embed.build()).queue();
         } else {
             embed.addField("Current leave message", message == null ? "None set." : message, false);
-            context.getChannel().sendMessage(embed.build()).queue();
+            env.getChannel().sendMessage(embed.build()).queue();
         }
     }
 }

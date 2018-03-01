@@ -2,7 +2,7 @@ package me.blayyke.reflex.command.commands.economy;
 
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 
 public class CommandPoints extends AbstractCommand {
     @Override
@@ -21,8 +21,8 @@ public class CommandPoints extends AbstractCommand {
     }
 
     @Override
-    public void onCommand(CommandContext context) {
-        long hashNumber = getReflex().getPointManager().getPoints(context.getMember().getUser());
-        context.getChannel().sendMessage("You have " + hashNumber + " points.").queue();
+    public void onCommand(CommandEnvironment env) {
+        long hashNumber = getReflex().getPointManager().getPoints(env.getMember().getUser());
+        env.getChannel().sendMessage("You have " + hashNumber + " points.").queue();
     }
 }

@@ -2,7 +2,7 @@ package me.blayyke.reflex.command.commands.utilities;
 
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 import me.blayyke.reflex.utils.UserUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
@@ -29,9 +29,9 @@ public class CommandGuildInfo extends AbstractCommand {
     }
 
     @Override
-    public void onCommand(CommandContext context) {
+    public void onCommand(CommandEnvironment env) {
         EmbedBuilder embedBuilder = createEmbed();
-        Guild guild = context.getGuild();
+        Guild guild = env.getGuild();
 
         embedBuilder.setTitle("Guild Information");
         embedBuilder.setThumbnail(guild.getIconUrl());
@@ -46,6 +46,6 @@ public class CommandGuildInfo extends AbstractCommand {
         embedBuilder.addField("2FA Enabled", (guild.getRequiredMFALevel() == Guild.MFALevel.TWO_FACTOR_AUTH ? "Yes" : "No"), true);
         embedBuilder.addField("Voice AFK Timeout", guild.getAfkTimeout().getSeconds() / 60 + " minutes", true);
 
-        context.getChannel().sendMessage(embedBuilder.build()).queue();
+        env.getChannel().sendMessage(embedBuilder.build()).queue();
     }
 }

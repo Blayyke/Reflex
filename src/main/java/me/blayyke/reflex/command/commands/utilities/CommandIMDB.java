@@ -2,7 +2,7 @@ package me.blayyke.reflex.command.commands.utilities;
 
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 import me.blayyke.reflex.utils.AbstractCallback;
 import me.blayyke.reflex.utils.MiscUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -29,17 +29,16 @@ public class CommandIMDB extends AbstractCommand {
     }
 
     @Override
-    protected void onCommand(CommandContext context) {
-        String url = "http://www.omdbapi.com/?t=" + MiscUtils.arrayToString(context.getArgs(), "+") + "&apikey=" + getReflex().getDataManager().getSettings().getOMDBAuth();
+    protected void onCommand(CommandEnvironment env) {
+        String url = "http://www.omdbapi.com/?t=" + MiscUtils.arrayToString(env.getArgs(), "+") + "&apikey=" + getReflex().getDataManager().getSettings().getOMDBAuth();
 
         getReflex().getHttpClient().get(new AbstractCallback() {
             @Override
             public void response(Response response) throws IOException {
                 JSONObject body = new JSONObject(Objects.requireNonNull(response.body()).string());
-                System.out.println(body.toString(2));
 
                 if (!body.getBoolean("Response")) {
-                    replyError(context, body.getString("Error"));
+                    replyError(env, body.getString("Error"));
                     return;
                 }
 
@@ -54,7 +53,6 @@ public class CommandIMDB extends AbstractCommand {
                 String metascore = body.getString("Metascore");
                 String imdbRating = body.getString("imdbRating");
                 String imdbVotes = body.getString("imdbVotes");
-                String imdbID = body.getString("imdbID");
 
                 EmbedBuilder embed = createEmbed();
 
@@ -74,7 +72,7 @@ public class CommandIMDB extends AbstractCommand {
                 embed.addField("Genre(s)", genres, true);
                 embed.addField("Language", language, true);
 
-                context.getChannel().sendMessage(embed.build()).queue();
+                env.getChannel().sendMessage(embed.build()).queue();
             }
         }, url);
     }

@@ -3,7 +3,7 @@ package me.blayyke.reflex.command.commands.nsfw;
 import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 import me.blayyke.reflex.utils.AbstractCallback;
 import me.blayyke.reflex.utils.MiscUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -36,8 +36,8 @@ public class CommandDanbooru extends AbstractCommand {
     }
 
     @Override
-    public void onCommand(CommandContext context) {
-        String url = "http://danbooru.donmai.us/posts.json?tags=" + MiscUtils.arrayToString(context.getArgs(), "_");
+    public void onCommand(CommandEnvironment env) {
+        String url = "http://danbooru.donmai.us/posts.json?tags=" + MiscUtils.arrayToString(env.getArgs(), "_");
 
         getReflex().getHttpClient().get(new AbstractCallback() {
             @Override
@@ -50,7 +50,7 @@ public class CommandDanbooru extends AbstractCommand {
                     embedBuilder.setColor(Colours.WARN);
                     embedBuilder.setDescription("No posts were found with your specified tags.");
 
-                    context.getChannel().sendMessage(embedBuilder.build()).queue();
+                    env.getChannel().sendMessage(embedBuilder.build()).queue();
                     return;
                 }
 
@@ -59,7 +59,7 @@ public class CommandDanbooru extends AbstractCommand {
                 embedBuilder.setImage("https://danbooru.donmai.us" + jsonObject.getString("file_url"));
                 embedBuilder.setDescription("Click [here](" + jsonObject.getString("source") + ") for source");
 
-                context.getChannel().sendMessage(embedBuilder.build()).queue();
+                env.getChannel().sendMessage(embedBuilder.build()).queue();
             }
         }, url);
     }

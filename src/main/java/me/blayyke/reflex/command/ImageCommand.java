@@ -25,13 +25,13 @@ public abstract class ImageCommand extends AbstractCommand {
     }
 
     @Override
-    public final void onCommand(CommandContext context) {
+    public final void onCommand(CommandEnvironment env) {
         EmbedBuilder embedBuilder = createEmbed();
 
         embedBuilder.setTitle(TextUtils.uppercaseFirst(getName()), getSiteUrl());
         get(receive -> {
             embedBuilder.setImage(receive);
-            context.getChannel().sendMessage(embedBuilder.build()).queue();
+            env.getChannel().sendMessage(embedBuilder.build()).queue();
         });
     }
 

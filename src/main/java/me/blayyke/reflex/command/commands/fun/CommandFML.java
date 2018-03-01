@@ -2,7 +2,7 @@ package me.blayyke.reflex.command.commands.fun;
 
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 import net.dv8tion.jda.core.EmbedBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
@@ -26,7 +26,7 @@ public class CommandFML extends AbstractCommand {
     }
 
     @Override
-    public void onCommand(CommandContext context) {
+    public void onCommand(CommandEnvironment env) {
         try {
             String address = "http://www.fmylife.com/random";
             Elements element = Jsoup.connect(address).get().select("div.panel-content");
@@ -36,7 +36,7 @@ public class CommandFML extends AbstractCommand {
 
             embedBuilder.setTitle("FML", "http://www.fmylife.com/random");
             embedBuilder.setDescription(text);
-            context.getChannel().sendMessage(embedBuilder.build()).queue();
+            env.getChannel().sendMessage(embedBuilder.build()).queue();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

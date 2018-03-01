@@ -3,7 +3,7 @@ package me.blayyke.reflex.command.commands.fun;
 import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 import me.blayyke.reflex.utils.MiscUtils;
 import me.blayyke.reflex.utils.ParseUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -33,19 +33,19 @@ public class CommandEmote extends AbstractCommand {
     }
 
     @Override
-    public void onCommand(CommandContext context) {
+    public void onCommand(CommandEnvironment env) {
         EmbedBuilder embedBuilder = createEmbed();
-        List<Emote> emoteList = ParseUtils.getEmotes(getReflex().getShardManager(), context.getArgs()[0]);
+        List<Emote> emoteList = ParseUtils.getEmotes(getReflex().getShardManager(), env.getArgs()[0]);
         if (emoteList.isEmpty()) {
             //No emotes found. Let's do unicode stuff
             embedBuilder.setTitle("Character info");
 
-            for (String s : context.getArgs()) {
+            for (String s : env.getArgs()) {
                 embedBuilder.appendDescription(MiscUtils.toHexString(s)).appendDescription(" | ")
                         .appendDescription(MiscUtils.getCharName(s)).appendDescription("\n");
             }
 
-            context.getChannel().sendMessage(embedBuilder.build()).queue();
+            env.getChannel().sendMessage(embedBuilder.build()).queue();
             return;
         }
         if (emoteList.size() > 1) {
@@ -53,11 +53,11 @@ public class CommandEmote extends AbstractCommand {
             embedBuilder.setTitle("Multiple emotes found");
             embedBuilder.setDescription("I found more than one emotes from your input. Please specify emote ID or mention the emote.");
 
-            context.getChannel().sendMessage(embedBuilder.build()).queue();
+            env.getChannel().sendMessage(embedBuilder.build()).queue();
             return;
         }
 
-        context.getChannel().sendMessage(createEmbed().setTitle(emoteList.get(0).getName()).setImage(emoteList.get(0).getImageUrl()).build()).queue();
+        env.getChannel().sendMessage(createEmbed().setTitle(emoteList.get(0).getName()).setImage(emoteList.get(0).getImageUrl()).build()).queue();
     }
 
     @Override

@@ -2,7 +2,7 @@ package me.blayyke.reflex.command.commands.utilities;
 
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 import me.blayyke.reflex.utils.AbstractCallback;
 import okhttp3.Response;
 import org.json.JSONObject;
@@ -32,13 +32,13 @@ public class CommandGeoLocate extends AbstractCommand {
     }
 
     @Override
-    public void onCommand(CommandContext context) {
-        String url = "https://freegeoip.net/json/" + context.getArgs()[0];
+    public void onCommand(CommandEnvironment env) {
+        String url = "https://freegeoip.net/json/" + env.getArgs()[0];
         getReflex().getHttpClient().get(new AbstractCallback() {
             @Override
             public void response(Response response) throws IOException {
                 JSONObject bodyObj = new JSONObject(Objects.requireNonNull(response.body()).string());
-                context.getChannel().sendMessage(createEmbed().setTitle("IP Location").setDescription("The rough geographical location for that IP is " + bodyObj.getString("country_name") + "/" + bodyObj.getString("region_name") + "/" + bodyObj.getString("city")).build()).queue();
+                env.getChannel().sendMessage(createEmbed().setTitle("IP Location").setDescription("The rough geographical location for that IP is " + bodyObj.getString("country_name") + "/" + bodyObj.getString("region_name") + "/" + bodyObj.getString("city")).build()).queue();
             }
         }, url);
     }

@@ -2,7 +2,7 @@ package me.blayyke.reflex.command.commands.fun;
 
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 import me.blayyke.reflex.utils.AbstractCallback;
 import net.dv8tion.jda.core.EmbedBuilder;
 import okhttp3.Response;
@@ -29,7 +29,7 @@ public class CommandFortune extends AbstractCommand {
     }
 
     @Override
-    public void onCommand(CommandContext context) {
+    public void onCommand(CommandEnvironment env) {
         String url = "http://fortunecookieapi.herokuapp.com/v1/cookie";
         getReflex().getHttpClient().get(new AbstractCallback() {
             @Override
@@ -41,7 +41,7 @@ public class CommandFortune extends AbstractCommand {
                 embedBuilder.setTitle("Fortune");
                 embedBuilder.setDescription(object.getString("message"));
 
-                context.getChannel().sendMessage(embedBuilder.build()).queue();
+                env.getChannel().sendMessage(embedBuilder.build()).queue();
             }
         }, url);
     }

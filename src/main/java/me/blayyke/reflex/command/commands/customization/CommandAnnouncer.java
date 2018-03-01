@@ -3,7 +3,7 @@ package me.blayyke.reflex.command.commands.customization;
 import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 import me.blayyke.reflex.database.keys.guild.KeyAnnouncerChannel;
 import me.blayyke.reflex.utils.ParseUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -28,20 +28,20 @@ public class CommandAnnouncer extends AbstractCommand {
     }
 
     @Override
-    public void onCommand(CommandContext context) {
+    public void onCommand(CommandEnvironment env) {
         EmbedBuilder embed = createEmbed(Colours.INFO).setTitle("Announcer settings");
 
-        if (context.hasArgs()) {
-            List<TextChannel> channels = ParseUtils.getTextChannels(context.getGuild(), context.getArgs()[0]);
+        if (env.hasArgs()) {
+            List<TextChannel> channels = ParseUtils.getTextChannels(env.getGuild(), env.getArgs()[0]);
             if (channels.isEmpty()) {
-                replyError(context, "No channel found with your input.");
+                replyError(env, "No channel found with your input.");
                 return;
             } else if (channels.size() > 1) {
-                replyError(context, "More than one channel was found with the provided input. Please be more specific (ID or mention).");
+                replyError(env, "More than one channel was found with the provided input. Please be more specific (ID or mention).");
                 return;
             }
 
-            TextChannel oldChannel = getReflex().getDataManager().getGuildStorage(context.getGuild()).getAnnouncerChannel();
+            TextChannel oldChannel = getReflex().getDataManager().getGuildStorage(env.getGuild()).getAnnouncerChannel();
             TextChannel newChannel = channels.get(0);
             String oldName = oldChannel == null ? "None set." : oldChannel.getAsMention();
             String newName = newChannel.getAsMention();
@@ -49,16 +49,16 @@ public class CommandAnnouncer extends AbstractCommand {
             embed.setDescription("The announcer channel has been updated.");
             embed.addField("Old channel", oldName, true);
 
-            getReflex().getDBManager().set(new KeyAnnouncerChannel(context.getGuild()), newChannel.getId());
+            getReflex().getDBManager().set(new KeyAnnouncerChannel(env.getGuild()), newChannel.getId());
 
             embed.addField("New channel", newName, true);
 
-            context.getChannel().sendMessage(embed.build()).queue();
+            env.getChannel().sendMessage(embed.build()).queue();
         } else {
-            TextChannel channel = getReflex().getDataManager().getGuildStorage(context.getGuild()).getAnnouncerChannel();
+            TextChannel channel = getReflex().getDataManager().getGuildStorage(env.getGuild()).getAnnouncerChannel();
 
             embed.addField("Current channel", channel == null ? "None set." : channel.getAsMention(), true);
-            context.getChannel().sendMessage(embed.build()).queue();
+            env.getChannel().sendMessage(embed.build()).queue();
         }
     }
 }

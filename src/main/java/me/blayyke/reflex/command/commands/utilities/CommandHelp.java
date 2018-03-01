@@ -3,7 +3,7 @@ package me.blayyke.reflex.command.commands.utilities;
 import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 import me.blayyke.reflex.utils.UserUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
@@ -32,16 +32,16 @@ public class CommandHelp extends AbstractCommand {
     }
 
     @Override
-    public void onCommand(CommandContext context) {
-        if (!context.hasArgs()) {
+    public void onCommand(CommandEnvironment env) {
+        if (!env.hasArgs()) {
             EmbedBuilder embed = createEmbed(Colours.INFO);
 
             embed.setTitle("Bot help");
-            embed.appendDescription(context.getJDA().getSelfUser().getName() + " is a bot made by " + UserUtils.formatUser(getReflex().getOwner()) + ", created to be useful and customizable.")
+            embed.appendDescription(env.getJDA().getSelfUser().getName() + " is a bot made by " + UserUtils.formatUser(getReflex().getOwner()) + ", created to be useful and customizable.")
                     .appendDescription("\n\n")
-                    .appendDescription("To get help on a command, use " + context.getPrefixUsed() + context.getAlias() + " <command>")
+                    .appendDescription("To get help on a command, use " + env.getPrefixUsed() + env.getAlias() + " <command>")
                     .appendDescription("\n")
-                    .appendDescription("To view all commands in a category, use " + context.getPrefixUsed() + context.getAlias() + " <category>")
+                    .appendDescription("To view all commands in a category, use " + env.getPrefixUsed() + env.getAlias() + " <category>")
                     .appendDescription("\n\n")
                     .appendDescription("To add me to your guild, click [here](https://reflex-bot.github.io/invite)")
                     .appendDescription("\n")
@@ -55,12 +55,12 @@ public class CommandHelp extends AbstractCommand {
             String categoryStr = builder.toString();
             embed.addField("Categories", categoryStr.substring(0, categoryStr.length() - 1), false);
 
-            context.getChannel().sendMessage(embed.build()).queue();
+            env.getChannel().sendMessage(embed.build()).queue();
             return;
         }
 
         // Has args
-        CommandCategory category = Arrays.stream(CommandCategory.values()).filter(c -> c.getName().equalsIgnoreCase(context.getArgs()[0])).findFirst().orElse(null);
+        CommandCategory category = Arrays.stream(CommandCategory.values()).filter(c -> c.getName().equalsIgnoreCase(env.getArgs()[0])).findFirst().orElse(null);
         if (category != null) {
             EmbedBuilder embed = createEmbed(Colours.INFO);
             StringBuilder builder = new StringBuilder();
@@ -73,15 +73,15 @@ public class CommandHelp extends AbstractCommand {
 
             embed.addField("Commands", cmdStr.substring(0, cmdStr.length() - 2), false);
 
-            context.getChannel().sendMessage(embed.build()).queue();
+            env.getChannel().sendMessage(embed.build()).queue();
             return;
         }
 
-        AbstractCommand cmd = getReflex().getCommandManager().getCommand(context.getArgs()[0]);
+        AbstractCommand cmd = getReflex().getCommandManager().getCommand(env.getArgs()[0]);
         if (cmd != null) {
             EmbedBuilder embed = createEmbed(Colours.INFO);
             embed.setTitle("Bot help");
-            embed.setDescription(context.getPrefixUsed() + "**" + cmd.getName() + "** - " + cmd.getDesc());
+            embed.setDescription(env.getPrefixUsed() + "**" + cmd.getName() + "** - " + cmd.getDesc());
 
             if (cmd.getRequiredPermissions().length > 0) {
                 StringBuilder builder = new StringBuilder();
@@ -111,14 +111,14 @@ public class CommandHelp extends AbstractCommand {
             } else
                 embed.addField("Aliases", "No aliases.", true);
 
-            context.getChannel().sendMessage(embed.build()).queue();
+            env.getChannel().sendMessage(embed.build()).queue();
             return;
         }
 
         // No category or cmd found
         EmbedBuilder embed = createEmbed(Colours.WARN);
         embed.setTitle("Bot help");
-        embed.setDescription("`" + context.getArgs()[0] + "` is not a valid command name or command category.");
-        context.getChannel().sendMessage(embed.build()).queue();
+        embed.setDescription("`" + env.getArgs()[0] + "` is not a valid command name or command category.");
+        env.getChannel().sendMessage(embed.build()).queue();
     }
 }

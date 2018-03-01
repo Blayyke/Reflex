@@ -2,7 +2,7 @@ package me.blayyke.reflex.command.commands.fun;
 
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 import me.blayyke.reflex.utils.MiscUtils;
 import me.blayyke.reflex.utils.TextUtils;
 
@@ -28,8 +28,8 @@ public class CommandCursive extends AbstractCommand {
     }
 
     @Override
-    protected void onCommand(CommandContext context) {
-        context.getChannel().sendMessage(TextUtils.toCursive(MiscUtils.arrayToString(context.getArgs(), " "))).queue();
+    protected void onCommand(CommandEnvironment env) {
+        env.getChannel().sendMessage(TextUtils.toCursive(MiscUtils.arrayToString(env.getArgs(), " "))).queue();
     }
 
     @Override

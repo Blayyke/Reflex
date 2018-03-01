@@ -3,7 +3,7 @@ package me.blayyke.reflex.command.commands.customization;
 import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 import me.blayyke.reflex.command.custom.CustomCommand;
 import me.blayyke.reflex.command.custom.CustomCommandType;
 import me.blayyke.reflex.utils.MiscUtils;
@@ -35,82 +35,82 @@ public class CommandCustom extends AbstractCommand {
     }
 
     @Override
-    public void onCommand(CommandContext context) {
+    public void onCommand(CommandEnvironment env) {
         EmbedBuilder embed = createEmbed();
 
-        switch (context.getArgs()[0].toLowerCase()) {
+        switch (env.getArgs()[0].toLowerCase()) {
             case "create":
-                if (getReflex().getCustomCommandManager().commandExists(context.getGuild(), context.getArgs()[1])) {
-                    replyError(context, "A command already exists with that name. If you would like to delete this command, use `" + context.getPrefixUsed() + context.getAlias() + " delete <name>.");
+                if (getReflex().getCustomCommandManager().commandExists(env.getGuild(), env.getArgs()[1])) {
+                    replyError(env, "A command already exists with that name. If you would like to delete this command, use `" + env.getPrefixUsed() + env.getAlias() + " delete <name>.");
                     return;
                 }
-                if (getReflex().getCommandManager().getCommand(context.getArgs()[1]) != null) {
-                    replyError(context, "A default command already exists with that name. Please use another name.");
+                if (getReflex().getCommandManager().getCommand(env.getArgs()[1]) != null) {
+                    replyError(env, "A default command already exists with that name. Please use another name.");
                     return;
                 }
 
-                CustomCommand command = new CustomCommand(getReflex(), context.getGuild(), context.getArgs()[1]);
+                CustomCommand command = new CustomCommand(getReflex(), env.getGuild(), env.getArgs()[1]);
                 command.setAction(null);
-                command.setCreatorId(context.getMember().getUser().getIdLong());
+                command.setCreatorId(env.getMember().getUser().getIdLong());
                 getReflex().getCustomCommandManager().createCommand(command);
-                context.getChannel().sendMessage(embed.setTitle("Created command").setDescription("Successfully created command `" + command.getName() + "`.").build()).queue();
+                env.getChannel().sendMessage(embed.setTitle("Created command").setDescription("Successfully created command `" + command.getName() + "`.").build()).queue();
                 break;
             case "action": {
-                String s = context.getArgs()[1];
-                CustomCommand c = getReflex().getCustomCommandManager().getCommand(context.getGuild(), s);
+                String s = env.getArgs()[1];
+                CustomCommand c = getReflex().getCustomCommandManager().getCommand(env.getGuild(), s);
                 if (c == null) {
-                    commandNotFound(context);
+                    commandNotFound(env);
                     return;
                 }
 
-                c.setAction(MiscUtils.arrayToString(context.getArgs(), 2, " "));
+                c.setAction(MiscUtils.arrayToString(env.getArgs(), 2, " "));
                 embed.setTitle("Command updated").setDescription("The action for that command has been updated.");
-                context.getChannel().sendMessage(embed.build()).queue();
+                env.getChannel().sendMessage(embed.build()).queue();
                 break;
             }
             case "description":
             case "desc": {
-                String s = context.getArgs()[1];
-                CustomCommand c = getReflex().getCustomCommandManager().getCommand(context.getGuild(), s);
+                String s = env.getArgs()[1];
+                CustomCommand c = getReflex().getCustomCommandManager().getCommand(env.getGuild(), s);
                 if (c == null) {
-                    commandNotFound(context);
+                    commandNotFound(env);
                     return;
                 }
 
-                c.setDesc(MiscUtils.arrayToString(context.getArgs(), 2, " "));
-                context.getChannel().sendMessage(embed.setTitle("Command updated").setDescription("Changed description of " + c.getName() + " to `" + c.getDesc() + "`.").build()).queue();
+                c.setDesc(MiscUtils.arrayToString(env.getArgs(), 2, " "));
+                env.getChannel().sendMessage(embed.setTitle("Command updated").setDescription("Changed description of " + c.getName() + " to `" + c.getDesc() + "`.").build()).queue();
                 break;
             }
             case "delete": {
-                String s = context.getArgs()[1];
-                CustomCommand c = getReflex().getCustomCommandManager().getCommand(context.getGuild(), s);
+                String s = env.getArgs()[1];
+                CustomCommand c = getReflex().getCustomCommandManager().getCommand(env.getGuild(), s);
                 if (c == null) {
-                    commandNotFound(context);
+                    commandNotFound(env);
                     return;
                 }
 
                 getReflex().getCustomCommandManager().deleteCommand(c);
                 embed.setTitle("Command deleted");
                 embed.setDescription("Command `" + c.getName() + "` has successfully been deleted.");
-                context.getChannel().sendMessage(embed.build()).queue();
+                env.getChannel().sendMessage(embed.build()).queue();
                 break;
             }
             case "mode":
             case "type": {
-                String s = context.getArgs()[1];
-                CustomCommand c = getReflex().getCustomCommandManager().getCommand(context.getGuild(), s);
+                String s = env.getArgs()[1];
+                CustomCommand c = getReflex().getCustomCommandManager().getCommand(env.getGuild(), s);
                 if (c == null) {
-                    commandNotFound(context);
+                    commandNotFound(env);
                     return;
                 }
 
-                CustomCommandType customCommandType = Arrays.stream(CustomCommandType.values()).filter(type -> type.toString().equalsIgnoreCase(context.getArgs()[2])).findAny().orElse(null);
+                CustomCommandType customCommandType = Arrays.stream(CustomCommandType.values()).filter(type -> type.toString().equalsIgnoreCase(env.getArgs()[2])).findAny().orElse(null);
 
                 if (customCommandType == null) {
                     embed.setTitle("Invalid type");
-                    replyError(context, "`" + TextUtils.escapeFormatting(context.getArgs()[2]) + "` is not a valid command type. Valid types are: " + MiscUtils.arrayToString(CustomCommandType.values(), ", "));
+                    replyError(env, "`" + TextUtils.escapeFormatting(env.getArgs()[2]) + "` is not a valid command type. Valid types are: " + MiscUtils.arrayToString(CustomCommandType.values(), ", "));
 
-                    context.getChannel().sendMessage(embed.build()).queue();
+                    env.getChannel().sendMessage(embed.build()).queue();
                     return;
                 }
 
@@ -118,14 +118,14 @@ public class CommandCustom extends AbstractCommand {
                 embed.setTitle("Command type updated");
                 embed.setDescription("Changed command type of " + c.getName() + " to " + c.getType().toString() + ".");
 
-                context.getChannel().sendMessage(embed.build()).queue();
+                env.getChannel().sendMessage(embed.build()).queue();
                 break;
             }
             default:
                 embed.setTitle("Unknown argument(s)");
                 embed.setDescription("Please provide a valid method argument. \nValid arguments include: ");
 
-                context.getChannel().sendMessage(embed.build()).queue();
+                env.getChannel().sendMessage(embed.build()).queue();
                 break;
         }
 
@@ -136,7 +136,7 @@ public class CommandCustom extends AbstractCommand {
         return 2;
     }
 
-    private void commandNotFound(CommandContext context) {
+    private void commandNotFound(CommandEnvironment context) {
         context.getChannel().sendMessage(createEmbed(Colours.ERROR).setTitle("Invalid command").setDescription("No custom commands were found by your input.").build()).queue();
     }
 }

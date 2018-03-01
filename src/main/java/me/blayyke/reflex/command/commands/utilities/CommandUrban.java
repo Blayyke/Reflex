@@ -3,7 +3,7 @@ package me.blayyke.reflex.command.commands.utilities;
 import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 import me.blayyke.reflex.utils.AbstractCallback;
 import me.blayyke.reflex.utils.MiscUtils;
 import okhttp3.Response;
@@ -35,8 +35,8 @@ public class CommandUrban extends AbstractCommand {
     }
 
     @Override
-    public void onCommand(CommandContext context) {
-        String query = MiscUtils.arrayToString(context.getArgs(), "+");
+    public void onCommand(CommandEnvironment env) {
+        String query = MiscUtils.arrayToString(env.getArgs(), "+");
         String url = "http://api.urbandictionary.com/v0/define?term=" + query;
         AbstractCallback callback = new AbstractCallback() {
             @Override
@@ -51,7 +51,7 @@ public class CommandUrban extends AbstractCommand {
 
                 String resultType = bodyObj.getString("result_type");
                 if (resultType.equalsIgnoreCase("no_results")) {
-                    context.getChannel().sendMessage(createEmbed(Colours.WARN)
+                    env.getChannel().sendMessage(createEmbed(Colours.WARN)
                             .setTitle("Urban Dictionary")
                             .setDescription("No results were found using your query!")
                             .build()).queue();
@@ -62,7 +62,7 @@ public class CommandUrban extends AbstractCommand {
                 String example = result.getString("example");
                 String definition = result.getString("definition");
 
-                context.getChannel().sendMessage(createEmbed(Colours.INFO)
+                env.getChannel().sendMessage(createEmbed(Colours.INFO)
                         .setTitle("Urban Dictionary")
                         .addField("Definition", definition, false)
                         .addField("Example", example, false)

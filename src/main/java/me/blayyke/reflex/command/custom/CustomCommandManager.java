@@ -4,7 +4,7 @@ import com.lambdaworks.redis.api.sync.RedisCommands;
 import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.Reflex;
 import me.blayyke.reflex.command.AbstractCommand;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 import me.blayyke.reflex.database.keys.KeyCustomCommand;
 import me.blayyke.reflex.database.keys.guild.KeyCommands;
 import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldAction;
@@ -99,10 +99,10 @@ public class CustomCommandManager {
             return;
         }
 
-        executeCommand(startTime, command, new CommandContext(event.getMessage(), event.getMember(), reflex, event.getJDA(), event.getGuild(), commandName, args, prefixUsed));
+        executeCommand(startTime, command, new CommandEnvironment(event.getMessage(), event.getMember(), reflex, event.getJDA(), event.getGuild(), commandName, args, prefixUsed));
     }
 
-    private void executeCommand(long startTime, CustomCommand command, CommandContext context) {
+    private void executeCommand(long startTime, CustomCommand command, CommandEnvironment context) {
         boolean failure = false;
         try {
             executionEngine.put("guild", new BoxedGuild(context.getGuild()));

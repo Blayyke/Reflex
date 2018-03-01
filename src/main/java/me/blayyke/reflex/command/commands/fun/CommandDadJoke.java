@@ -2,7 +2,7 @@ package me.blayyke.reflex.command.commands.fun;
 
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 import me.blayyke.reflex.utils.AbstractCallback;
 import net.dv8tion.jda.core.EmbedBuilder;
 import okhttp3.Headers;
@@ -34,7 +34,7 @@ public class CommandDadJoke extends AbstractCommand {
     }
 
     @Override
-    public void onCommand(CommandContext context) {
+    public void onCommand(CommandEnvironment env) {
         String url = "https://icanhazdadjoke.com";
 
         getReflex().getHttpClient().get(new AbstractCallback() {
@@ -46,7 +46,7 @@ public class CommandDadJoke extends AbstractCommand {
                 embed.setTitle("Dad Joke", "https://icanhazdadjoke.com/j/" + object.getString("id"));
                 embed.setDescription(object.getString("joke"));
 
-                context.getChannel().sendMessage(embed.build()).queue();
+                env.getChannel().sendMessage(embed.build()).queue();
             }
         }, url, new Headers.Builder().add("Accept", "application/json").build());
     }

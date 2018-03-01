@@ -3,7 +3,7 @@ package me.blayyke.reflex.command.commands.developer;
 import me.blayyke.reflex.Colours;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -46,19 +46,19 @@ public class CommandEval extends AbstractCommand {
     }
 
     @Override
-    public void onCommand(CommandContext context) {
-        engine.put("context", context);
+    public void onCommand(CommandEnvironment env) {
+        engine.put("context", env);
 
         try {
             Object out = engine.eval(
                     "(function() {" +
                             "with (imports) {" +
-                            context.getMessage().getContentRaw().substring((context.getPrefixUsed() + context.getAlias()).length() + 1) +
+                            env.getMessage().getContentRaw().substring((env.getPrefixUsed() + env.getAlias()).length() + 1) +
                             "}" +
                             "})();");
-            context.getChannel().sendMessage(out == null ? "Executed successfully." : out.toString()).queue();
+            env.getChannel().sendMessage(out == null ? "Executed successfully." : out.toString()).queue();
         } catch (ScriptException e) {
-            context.getChannel().sendMessage(createEmbed(Colours.ERROR).setTitle("Failure!").setDescription("Failed to onCommand code.").build()).queue();
+            env.getChannel().sendMessage(createEmbed(Colours.ERROR).setTitle("Failure!").setDescription("Failed to onCommand code.").build()).queue();
             e.printStackTrace();
         }
     }

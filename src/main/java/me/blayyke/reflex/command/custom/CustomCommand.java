@@ -3,7 +3,7 @@ package me.blayyke.reflex.command.custom;
 import me.blayyke.reflex.Reflex;
 import me.blayyke.reflex.command.AbstractCommand;
 import me.blayyke.reflex.command.CommandCategory;
-import me.blayyke.reflex.command.CommandContext;
+import me.blayyke.reflex.command.CommandEnvironment;
 import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldAction;
 import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldCreator;
 import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldDesc;
@@ -45,18 +45,18 @@ public class CustomCommand extends AbstractCommand {
     }
 
     @Override
-    public void onCommand(CommandContext context) {
+    public void onCommand(CommandEnvironment env) {
         if (getAction() == null || getAction().isEmpty()) {
-            context.getChannel().sendMessage("Action not set for this command. Please get an admin to set it with " + context.getPrefixUsed() + "custom action " + getName() + " <action>").queue();
+            env.getChannel().sendMessage("Action not set for this command. Please get an admin to set it with " + env.getPrefixUsed() + "custom action " + getName() + " <action>").queue();
             return;
         }
 
         if (type == CustomCommandType.MESSAGE) {
             String message
-                    = MiscUtils.formatStringGuild(getAction(), context.getGuild());
-            message = MiscUtils.formatStringUser(message, context.getMember().getUser());
+                    = MiscUtils.formatStringGuild(getAction(), env.getGuild());
+            message = MiscUtils.formatStringUser(message, env.getMember().getUser());
 
-            context.getChannel().sendMessage(message).queue();
+            env.getChannel().sendMessage(message).queue();
         } else if (type == CustomCommandType.ADVANCED) {
             try {
                 String code = FUNCTION_RANDOM + "\n" + FUNCTION_RANDOM_NUMBER + "\n" + LEN + "\n" + LENGTH + "\n"
@@ -66,7 +66,7 @@ public class CustomCommand extends AbstractCommand {
                 throw new RuntimeException(e);
             }
         } else {
-            context.getChannel().sendMessage("Custom command type not set for this command. Please get an admin to set it with " + context.getPrefixUsed() + "custom type " + getName() + " <type>").queue();
+            env.getChannel().sendMessage("Custom command type not set for this command. Please get an admin to set it with " + env.getPrefixUsed() + "custom type " + getName() + " <type>").queue();
         }
     }
 
