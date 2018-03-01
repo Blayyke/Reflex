@@ -1,6 +1,11 @@
 package me.blayyke.reflex.utils;
 
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class TextUtils {
+    private static DateTimeFormatter PRETTY_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+
     public static boolean isAllLetters(CharSequence charSequence) {
         return charSequence.chars().allMatch(Character::isLetter);
     }
@@ -156,5 +161,9 @@ public class TextUtils {
             out.append(replaceCursive(c));
         }
         return out.toString();
+    }
+
+    public static String formatDatePretty(OffsetDateTime joinDate) {
+        return PRETTY_FORMATTER.format(joinDate);
     }
 }
