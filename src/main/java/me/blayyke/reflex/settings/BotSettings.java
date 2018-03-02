@@ -22,6 +22,7 @@ public class BotSettings {
 
     private int totalShardCount;
     private DBSettings databaseSettings;
+    private String trnAuth;
 
     public BotSettings(Reflex bot) {
         this.bot = bot;
@@ -57,6 +58,7 @@ public class BotSettings {
         this.dpwAuth = readFromJson(data, "dpw_auth", "");
         this.bfdAuth = readFromJson(data, "bfd_auth", "");
         this.omdbAuth = readFromJson(data, "omdb_auth", "");
+        this.trnAuth = readFromJson(data, "trn_auth", "bda71f9b-90ec-468b-8342-7f57bd62d3f9");
 
         JSONObject dbSettings = readFromJson(data, "db_settings", new JSONObject()
                 .put("port", 6379)
@@ -107,5 +109,9 @@ public class BotSettings {
 
     public String getOMDBAuth() {
         return omdbAuth;
+    }
+
+    public String getTrnAuth() {
+        return trnAuth;
     }
 }
