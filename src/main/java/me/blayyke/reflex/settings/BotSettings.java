@@ -19,6 +19,7 @@ public class BotSettings {
     private String dboAuth;
     private String bfdAuth;
     private String omdbAuth;
+    private String googleAuth;
 
     private int totalShardCount;
     private DBSettings databaseSettings;
@@ -58,7 +59,8 @@ public class BotSettings {
         this.dpwAuth = readFromJson(data, "dpw_auth", "");
         this.bfdAuth = readFromJson(data, "bfd_auth", "");
         this.omdbAuth = readFromJson(data, "omdb_auth", "");
-        this.trnAuth = readFromJson(data, "trn_auth", "bda71f9b-90ec-468b-8342-7f57bd62d3f9");
+        this.trnAuth = readFromJson(data, "trn_auth", "");
+        this.googleAuth = readFromJson(data, "google_auth", "");
 
         JSONObject dbSettings = readFromJson(data, "db_settings", new JSONObject()
                 .put("port", 6379)
@@ -101,6 +103,10 @@ public class BotSettings {
 
     public String getBfdAuth() {
         return bfdAuth;
+    }
+
+    public String getGoogleAuth() {
+        return googleAuth;
     }
 
     public DBSettings getDatabaseSettings() {
