@@ -17,12 +17,12 @@ public class CommandEnvironment {
     private final String alias;
     private final String prefixUsed;
 
-    public CommandEnvironment(Message message, Member member, Reflex reflex, JDA jda, Guild guild, String alias, String[] args, String prefixUsed) {
+    public CommandEnvironment(Message message, Reflex reflex, Guild guild, String alias, String[] args, String prefixUsed) {
         this.message = message;
-        this.member = member;
+        this.member = this.message.getMember();
         this.reflex = reflex;
-        this.jda = jda;
         this.guild = guild;
+        this.jda = this.guild.getJDA();
         this.args = args;
         this.alias = alias;
         this.prefixUsed = prefixUsed;
