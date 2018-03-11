@@ -43,6 +43,9 @@ public abstract class AbstractCommand {
         return new Permission[0];
     }
 
+    protected void init() {
+    }
+
     public abstract String getName();
 
     public abstract String getDesc();

@@ -55,6 +55,7 @@ public class CommandManager {
         commandMap.put(command.getName().toLowerCase(), command);
 
         for (String alias : command.getAliases()) aliasMap.put(alias.toLowerCase(), command);
+        command.init();
         logger.info("Successfully loaded command {}!", command.getName());
     }
 
@@ -116,7 +117,7 @@ public class CommandManager {
         }
 
         try {
-            command.execute(new CommandEnvironment(event.getMessage(), event.getMember(), reflex, event.getJDA(), event.getGuild(), commandName, args, prefixUsed));
+            command.execute(new CommandEnvironment(event.getMessage(), reflex, commandName, args, prefixUsed));
         } catch (Exception e) {
             commandFailures++;
             logger.warn("[#{}] Command {} failed in guild {} with args {}", commandFailures, command.getName(), event.getGuild().getId(), Arrays.toString(args));
