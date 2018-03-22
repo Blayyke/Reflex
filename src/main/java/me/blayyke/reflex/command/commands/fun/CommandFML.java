@@ -10,19 +10,8 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 
 public class CommandFML extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.FUN;
-    }
-
-    @Override
-    public String getName() {
-        return "fml";
-    }
-
-    @Override
-    public String getDesc() {
-        return "Get a random FML from FMyLife.com";
+    public CommandFML() {
+        super(CommandCategory.FUN, "fml", "Get a random FML from FMyLife.com", null);
     }
 
     @Override

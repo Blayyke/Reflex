@@ -5,19 +5,8 @@ import me.blayyke.reflex.command.CommandCategory;
 import me.blayyke.reflex.command.CommandEnvironment;
 
 public class CommandPoints extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.FUN;
-    }
-
-    @Override
-    public String getName() {
-        return "points";
-    }
-
-    @Override
-    public String getDesc() {
-        return "See how many points you have accumulated";
+    public CommandPoints() {
+        super(CommandCategory.ECONOMY, "points", "View your banked points", new String[]{"credits"});
     }
 
     @Override

@@ -14,24 +14,8 @@ import net.dv8tion.jda.core.Permission;
 import java.util.Arrays;
 
 public class CommandCustom extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.CUSTOMIZATION;
-    }
-
-    @Override
-    public Permission[] getRequiredPermissions() {
-        return new Permission[]{Permission.MANAGE_SERVER};
-    }
-
-    @Override
-    public String getName() {
-        return "custom";
-    }
-
-    @Override
-    public String getDesc() {
-        return "Create, delete and manage custom commands for this guild.";
+    public CommandCustom() {
+        super(CommandCategory.CUSTOMIZATION, "custom", "Create, delete and manage custom commands for this guild", null, Permission.MANAGE_SERVER);
     }
 
     @Override
@@ -77,8 +61,8 @@ public class CommandCustom extends AbstractCommand {
                     return;
                 }
 
-                c.setDesc(MiscUtils.arrayToString(env.getArgs(), 2, " "));
-                env.getChannel().sendMessage(embed.setTitle("Command updated").setDescription("Changed description of " + c.getName() + " to `" + c.getDesc() + "`.").build()).queue();
+                c.setDescription(MiscUtils.arrayToString(env.getArgs(), 2, " "));
+                env.getChannel().sendMessage(embed.setTitle("Command updated").setDescription("Changed description of " + c.getName() + " to `" + c.getDescription() + "`.").build()).queue();
                 break;
             }
             case "delete": {

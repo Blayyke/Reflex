@@ -18,9 +18,8 @@ import java.util.Objects;
 public class CommandTranslate extends AbstractCommand {
     private BidiMap<String, String> langMap = new TreeBidiMap<>();
 
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.UTILITIES;
+    public CommandTranslate() {
+        super(CommandCategory.UTILITIES, "translate", "Translate text using yandex.net translator", null);
     }
 
     @Override
@@ -39,16 +38,6 @@ public class CommandTranslate extends AbstractCommand {
                 }
             }
         }, url);
-    }
-
-    @Override
-    public String getName() {
-        return "translate";
-    }
-
-    @Override
-    public String getDesc() {
-        return "Translate text using yandex.net translator";
     }
 
     @Override

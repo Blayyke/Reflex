@@ -13,19 +13,8 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class CommandFortune extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.FUN;
-    }
-
-    @Override
-    public String getName() {
-        return "fortune";
-    }
-
-    @Override
-    public String getDesc() {
-        return "Get a random fortune";
+    public CommandFortune() {
+        super(CommandCategory.FUN, "fortune", "Get a random fortune", null);
     }
 
     @Override

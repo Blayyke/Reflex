@@ -8,24 +8,8 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 
 public class CommandGuildInfo extends AbstractCommand {
-    @Override
-    public String getName() {
-        return "guildinfo";
-    }
-
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.UTILITIES;
-    }
-
-    @Override
-    public String getDesc() {
-        return "View information about this guild";
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"guild", "gi", "server", "serverinfo", "si"};
+    public CommandGuildInfo() {
+        super(CommandCategory.UTILITIES, "guildinfo", "View information about a role", new String[]{"guild", "gi", "server", "si", "serverinfo"});
     }
 
     @Override

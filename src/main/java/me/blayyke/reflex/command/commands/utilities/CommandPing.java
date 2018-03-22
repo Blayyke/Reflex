@@ -7,19 +7,8 @@ import me.blayyke.reflex.command.CommandEnvironment;
 import net.dv8tion.jda.core.EmbedBuilder;
 
 public class CommandPing extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.UTILITIES;
-    }
-
-    @Override
-    public String getName() {
-        return "ping";
-    }
-
-    @Override
-    public String getDesc() {
-        return "View the bots ping to discord";
+    public CommandPing() {
+        super(CommandCategory.UTILITIES, "ping", "View the bots ping to discord", null);
     }
 
     @Override

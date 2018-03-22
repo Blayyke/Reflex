@@ -6,24 +6,8 @@ import me.blayyke.reflex.command.CommandEnvironment;
 import net.dv8tion.jda.core.EmbedBuilder;
 
 public class CommandInfo extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.UTILITIES;
-    }
-
-    @Override
-    public String getName() {
-        return "info";
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"botinfo", "information", "stats", "statistics"};
-    }
-
-    @Override
-    public String getDesc() {
-        return "Show some information about me";
+    public CommandInfo() {
+        super(CommandCategory.UTILITIES, "stats", "Show some bot statistics/information", new String[]{"statistics", "botinfo"});
     }
 
     @Override

@@ -7,14 +7,8 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 
 public class CommandKick extends PunishmentCommand {
-    @Override
-    public Permission[] getBotRequiredPermissions() {
-        return new Permission[]{Permission.KICK_MEMBERS};
-    }
-
-    @Override
-    public Permission[] getRequiredPermissions() {
-        return new Permission[]{Permission.KICK_MEMBERS};
+    public CommandKick() {
+        super("kick", Permission.KICK_MEMBERS);
     }
 
     @Override
@@ -25,16 +19,6 @@ public class CommandKick extends PunishmentCommand {
         embed.setDescription("Successfully kicked " + UserUtils.formatUser(member.getUser()));
 
         return embed;
-    }
-
-    @Override
-    public String getName() {
-        return "kick";
-    }
-
-    @Override
-    public String getDesc() {
-        return "Kick a member from the server";
     }
 
     @Override

@@ -9,24 +9,8 @@ import me.blayyke.reflex.utils.MiscUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 
 public class CommandWelcome extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.CUSTOMIZATION;
-    }
-
-    @Override
-    public String getName() {
-        return "welcome";
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"join"};
-    }
-
-    @Override
-    public String getDesc() {
-        return "Change the welcome message if enabled.";
+    public CommandWelcome() {
+        super(CommandCategory.CUSTOMIZATION, "welcome", "Change the welcome message if enabled", new String[]{"join"});
     }
 
     @Override

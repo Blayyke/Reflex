@@ -8,19 +8,8 @@ import me.blayyke.reflex.database.keys.user.KeyPointsCooldown;
 import java.util.concurrent.TimeUnit;
 
 public class CommandDaily extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.FUN;
-    }
-
-    @Override
-    public String getName() {
-        return "daily";
-    }
-
-    @Override
-    public String getDesc() {
-        return "Get 100 credits for the day";
+    public CommandDaily() {
+        super(CommandCategory.ECONOMY, "daily", "Get your daily credits", null);
     }
 
     @Override

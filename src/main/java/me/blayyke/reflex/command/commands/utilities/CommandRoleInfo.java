@@ -12,31 +12,9 @@ import net.dv8tion.jda.core.entities.Role;
 import java.util.List;
 
 public class CommandRoleInfo extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.UTILITIES;
+    public CommandRoleInfo() {
+        super(CommandCategory.UTILITIES, "roleinfo", "View information about a role", new String[]{"role", "ri"});
     }
-
-    @Override
-    public String getName() {
-        return "roleinfo";
-    }
-
-    @Override
-    public int getRequiredArgs() {
-        return 1;
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"role", "ri"};
-    }
-
-    @Override
-    public String getDesc() {
-        return "View information about the provided role";
-    }
-
 
     @Override
     protected void onCommand(CommandEnvironment env) {

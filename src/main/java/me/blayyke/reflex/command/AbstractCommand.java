@@ -17,55 +17,74 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractCommand {
+    private final CommandCategory category;
+    private final String name;
+    private final String[] aliases;
+    private final Permission[] requiredPermissions;
+    private String description;
     private Map<String, Long> cooldownMap = new HashMap<>();
+    private Map<String, Boolean> sentCooldownMessage = new HashMap<>();
 
     private Reflex reflex;
 
-    protected final Reflex getReflex() {
-        return reflex;
+    public AbstractCommand(CommandCategory category, String name, String description, String[] aliases, Permission... requiredPermissions) {
+        this.category = category;
+        this.name = name;
+        this.description = description;
+        this.aliases = aliases == null ? new String[0] : aliases;
+        this.requiredPermissions = requiredPermissions;
     }
 
-    public Permission[] getRequiredPermissions() {
-        return new Permission[0];
+    protected final Reflex getReflex() {
+        return reflex;
     }
 
     public final void setReflex(Reflex reflex) {
         this.reflex = reflex;
     }
 
-    public String[] getAliases() {
-        return new String[0];
-    }
-
-    public abstract CommandCategory getCategory();
-
-    public Permission[] getBotRequiredPermissions() {
-        return new Permission[0];
-    }
-
     protected void init() {
     }
 
-    public abstract String getName();
-
-    public abstract String getDesc();
-
-    public final void execute(CommandEnvironment context) {
-        if (context.getArgs().length < getRequiredArgs()) {
-            replyError(context, "This command requires at least " + getRequiredArgs() + " arguments.");
-            return;
-        }
-        if (hasCooldown(context.getMember().getUser())) {
-            replyError(context, "Please wait " + getRemainingCooldown(context.getMember().getUser()) + " seconds before executing this command.");
-            return;
-        }
-
-        onCommand(context);
-        activateCooldown(context.getMember().getUser());
+    public String getName() {
+        return name;
     }
 
-    public void replyError(CommandEnvironment context, String s) {
-        context.getChannel().sendMessage(MiscUtils.ERROR + " " + s).queue();
+    public String getDescription() {
+        return description;
+    }
+
+    public CommandCategory getCategory() {
+        return category;
+    }
+
+    public Permission[] getRequiredPermissions() {
+        return requiredPermissions;
+    }
+
+    public String[] getAliases() {
+        return aliases;
+    }
+
+    public final void execute(CommandEnvironment env) {
+        if (env.getArgs().length < getRequiredArgs()) {
+            replyError(env, "This command requires at least " + getRequiredArgs() + " arguments.");
+            return;
+        }
+        if (hasCooldown(env.getMember().getUser())) {
+            if (sentCooldownMessage.get(env.getMember().getUser().getId())) return;
+            replyError(env, "Please wait " + getRemainingCooldown(env.getMember().getUser()) + " seconds before executing this command.");
+            sentCooldownMessage.put(env.getMember().getUser().getId(), true);
+            return;
+        }
+        sentCooldownMessage.remove(env.getMember().getUser().getId());
+
+        onCommand(env);
+        activateCooldown(env.getMember().getUser());
+    }
+
+    public void replyError(CommandEnvironment env, String s) {
+        env.getChannel().sendMessage(MiscUtils.ERROR + " " + s).queue();
     }
 
     private void activateCooldown(User user) {

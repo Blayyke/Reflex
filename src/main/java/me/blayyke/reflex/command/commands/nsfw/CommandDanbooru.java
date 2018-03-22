@@ -15,24 +15,8 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class CommandDanbooru extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.NSFW;
-    }
-
-    @Override
-    public String getName() {
-        return "danbooru";
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"rule34", "r34"};
-    }
-
-    @Override
-    public String getDesc() {
-        return "Sends an image from danbooru.donmai.us with your provided tags";
+    public CommandDanbooru() {
+        super(CommandCategory.NSFW, "danbooru", "Send an NSFW image", new String[]{"rule34", "r34"});
     }
 
     @Override

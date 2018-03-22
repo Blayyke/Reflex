@@ -1,17 +1,10 @@
 package me.blayyke.reflex.command.commands.fun;
 
-import me.blayyke.reflex.command.CommandCategory;
 import me.blayyke.reflex.command.ImageCommand;
 
 public class CommandDog extends ImageCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.FUN;
-    }
-
-    @Override
-    public String getName() {
-        return "dog";
+    public CommandDog() {
+        super("dog", "Show a random dog image", null);
     }
 
     @Override

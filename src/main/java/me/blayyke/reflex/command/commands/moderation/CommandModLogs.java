@@ -12,24 +12,8 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import java.util.List;
 
 public class CommandModLogs extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.MODERATION;
-    }
-
-    @Override
-    public String getName() {
-        return "modlogs";
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"modlog", "ml"};
-    }
-
-    @Override
-    public String getDesc() {
-        return "Log to a mod-logs channel whenever a moderator action is issued.";
+    public CommandModLogs() {
+        super(CommandCategory.MODERATION, "modlogs", "Set the channel to notify in whenever a moderator action is issued", new String[]{"ml"});
     }
 
     @Override

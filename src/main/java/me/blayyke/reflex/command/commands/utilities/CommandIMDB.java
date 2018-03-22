@@ -13,19 +13,8 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class CommandIMDB extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.UTILITIES;
-    }
-
-    @Override
-    public String getName() {
-        return "imdb";
-    }
-
-    @Override
-    public String getDesc() {
-        return "Get movie data from IMDB";
+    public CommandIMDB() {
+        super(CommandCategory.UTILITIES, "imdb", "Get movie/show data from IMDB", new String[]{"movie"});
     }
 
     @Override

@@ -9,19 +9,8 @@ import me.blayyke.reflex.utils.MiscUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 
 public class CommandLeave extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.CUSTOMIZATION;
-    }
-
-    @Override
-    public String getName() {
-        return "leave";
-    }
-
-    @Override
-    public String getDesc() {
-        return "Change the leave message if enabled.";
+    public CommandLeave() {
+        super(CommandCategory.CUSTOMIZATION, "leave", "Change the leave message if enabled", null);
     }
 
     @Override

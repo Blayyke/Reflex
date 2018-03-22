@@ -91,11 +91,11 @@ public class CommandManager {
                     .addField("Required permissions", MiscUtils.arrayToString(permArr, ", "), false).build()).queue();
             return;
         }
-        if (!event.getGuild().getSelfMember().hasPermission(command.getBotRequiredPermissions())) {
-            String[] permArr = new String[command.getBotRequiredPermissions().length];
+        if (!event.getGuild().getSelfMember().hasPermission(command.getRequiredPermissions())) {
+            String[] permArr = new String[command.getRequiredPermissions().length];
 
-            for (int i = 0; i < command.getBotRequiredPermissions().length; i++)
-                permArr[i] = command.getBotRequiredPermissions()[i].getName();
+            for (int i = 0; i < command.getRequiredPermissions().length; i++)
+                permArr[i] = command.getRequiredPermissions()[i].getName();
 
             event.getChannel().sendMessage(AbstractCommand.createEmbed(Colours.WARN).setTitle("Failure!").setDescription("I do not have the required permissions to execute this command.")
                     .addField("Required permissions", MiscUtils.arrayToString(permArr, ", "), false).build()).queue();

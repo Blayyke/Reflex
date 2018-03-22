@@ -7,22 +7,10 @@ import me.blayyke.reflex.utils.MiscUtils;
 import me.blayyke.reflex.utils.UserUtils;
 
 public class CommandSay extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.UTILITIES;
+    public CommandSay() {
+        super(CommandCategory.UTILITIES, "say", "Say something using the bot", new String[]{"talk", "speak"});
     }
 
-    @Override
-    public String getName() {
-        return "say";
-    }
-
-    @Override
-    public String getDesc() {
-        return "Make the bot say something";
-    }
-
-    @Override
     protected void onCommand(CommandEnvironment env) {
         env.getChannel().sendMessage("**" + UserUtils.formatUser(env.getMember().getUser()) + "** - " + MiscUtils.arrayToString(env.getArgs(), " ")).queue();
     }
@@ -30,5 +18,10 @@ public class CommandSay extends AbstractCommand {
     @Override
     public int getRequiredArgs() {
         return 1;
+    }
+
+    @Override
+    public int getCooldown() {
+        return 3;
     }
 }

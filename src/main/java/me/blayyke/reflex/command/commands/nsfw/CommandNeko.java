@@ -15,19 +15,8 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class CommandNeko extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.NSFW;
-    }
-
-    @Override
-    public String getName() {
-        return "neko";
-    }
-
-    @Override
-    public String getDesc() {
-        return "Send an image from nekos.brussell.me with your specified tags";
+    public CommandNeko() {
+        super(CommandCategory.NSFW, "neko", "Send an NSFW image", new String[]{"catgirl"});
     }
 
     @Override

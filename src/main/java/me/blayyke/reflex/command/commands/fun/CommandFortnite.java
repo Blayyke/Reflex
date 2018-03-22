@@ -15,19 +15,8 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class CommandFortnite extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.FUN;
-    }
-
-    @Override
-    public String getName() {
-        return "fortnite";
-    }
-
-    @Override
-    public String getDesc() {
-        return "Show PUBG info for a user";
+    public CommandFortnite() {
+        super(CommandCategory.FUN, "fortnite", "View a users Fortnite stats", null);
     }
 
     private enum FortniteGameMode {

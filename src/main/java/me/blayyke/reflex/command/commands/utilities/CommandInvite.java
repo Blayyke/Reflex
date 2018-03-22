@@ -5,24 +5,8 @@ import me.blayyke.reflex.command.CommandCategory;
 import me.blayyke.reflex.command.CommandEnvironment;
 
 public class CommandInvite extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.UTILITIES;
-    }
-
-    @Override
-    public String getName() {
-        return "invite";
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"guild", "support"};
-    }
-
-    @Override
-    public String getDesc() {
-        return "Send the invite URL for the support discord and the bot";
+    public CommandInvite() {
+        super(CommandCategory.UTILITIES, "invite", "Invite me to your server or join mine", new String[]{"support", "addme", "inviteme"});
     }
 
     @Override

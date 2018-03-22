@@ -5,19 +5,8 @@ import me.blayyke.reflex.command.ImageCommand;
 import org.json.JSONArray;
 
 public class CommandBoobs extends ImageCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.NSFW;
-    }
-
-    @Override
-    public String getName() {
-        return "boobs";
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"tits", "nude"};
+    public CommandBoobs() {
+        super(CommandCategory.NSFW, "boobs", "Send an NSFW image", new String[]{"tits", "nude"});
     }
 
     @Override

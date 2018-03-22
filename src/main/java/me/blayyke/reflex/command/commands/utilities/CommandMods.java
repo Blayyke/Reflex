@@ -18,32 +18,12 @@ public class CommandMods extends AbstractCommand {
     private Map<OnlineStatus, String> statusMap = new HashMap<>();
 
     public CommandMods() {
+        super(CommandCategory.UTILITIES, "mods", "Show online server staff", new String[]{"staff"});
         statusMap.put(OnlineStatus.DO_NOT_DISTURB, "<:rDnd:419043487195987968>");
         statusMap.put(OnlineStatus.IDLE, "<:rIdle:419043486830952469>");
         statusMap.put(OnlineStatus.OFFLINE, "<:rOffline:419043487065964555>");
         statusMap.put(OnlineStatus.ONLINE, "<:rOnline:419043487238062081>");
     }
-
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.UTILITIES;
-    }
-
-    @Override
-    public String getName() {
-        return "mods";
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"staff"};
-    }
-
-    @Override
-    public String getDesc() {
-        return "Show the server moderators";
-    }
-
     @Override
     protected void onCommand(CommandEnvironment env) {
         StringBuilder builder = new StringBuilder();

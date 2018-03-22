@@ -15,19 +15,8 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class CommandLoli extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.NSFW;
-    }
-
-    @Override
-    public String getName() {
-        return "loli";
-    }
-
-    @Override
-    public String getDesc() {
-        return null;
+    public CommandLoli() {
+        super(CommandCategory.NSFW, "loli", "Send an NSFW image", null);
     }
 
     @Override

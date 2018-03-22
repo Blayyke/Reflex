@@ -14,31 +14,14 @@ import net.dv8tion.jda.core.entities.Role;
 import java.util.List;
 
 public class CommandUserInfo extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.UTILITIES;
-    }
-
-    @Override
-    public String getName() {
-        return "userinfo";
+    public CommandUserInfo() {
+        super(CommandCategory.UTILITIES, "userinfo", "View information about a user", new String[]{"user", "member", "ui"});
     }
 
     @Override
     public int getRequiredArgs() {
         return 1;
     }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"user", "member", "ui"};
-    }
-
-    @Override
-    public String getDesc() {
-        return "View information about the provided user";
-    }
-
 
     @Override
     protected void onCommand(CommandEnvironment env) {

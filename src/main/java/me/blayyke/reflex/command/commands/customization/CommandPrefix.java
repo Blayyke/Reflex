@@ -10,19 +10,8 @@ import me.blayyke.reflex.utils.TextUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 
 public class CommandPrefix extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.CUSTOMIZATION;
-    }
-
-    @Override
-    public String getName() {
-        return "prefix";
-    }
-
-    @Override
-    public String getDesc() {
-        return "View or change the bots command prefix";
+    public CommandPrefix() {
+        super(CommandCategory.CUSTOMIZATION, "prefix", "View or change the bots command prefix", null);
     }
 
     @Override

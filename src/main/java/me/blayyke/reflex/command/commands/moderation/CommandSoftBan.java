@@ -7,14 +7,8 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 
 public class CommandSoftBan extends PunishmentCommand {
-    @Override
-    public Permission[] getBotRequiredPermissions() {
-        return new Permission[]{Permission.BAN_MEMBERS};
-    }
-
-    @Override
-    public Permission[] getRequiredPermissions() {
-        return new Permission[]{Permission.BAN_MEMBERS};
+    public CommandSoftBan() {
+        super("softban", Permission.BAN_MEMBERS);
     }
 
     @Override
@@ -27,16 +21,6 @@ public class CommandSoftBan extends PunishmentCommand {
         embed.setDescription("Successfully soft-banned " + UserUtils.formatUser(member.getUser()));
 
         return embed;
-    }
-
-    @Override
-    public String getName() {
-        return "softban";
-    }
-
-    @Override
-    public String getDesc() {
-        return "Soft-ban a member from the server";
     }
 
     @Override

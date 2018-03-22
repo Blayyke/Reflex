@@ -12,24 +12,8 @@ public class CommandEightBall extends AbstractCommand {
             "Reply hazy, try again", "Ask again later", "Better not tell you now", "Cannot predict now", "Concentrate and ask again",
             "Don't count on it", "My reply is no", "My sources say no", "Outlook not so good", "Very doubtful"};
 
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.FUN;
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"eightball"};
-    }
-
-    @Override
-    public String getName() {
-        return "8ball";
-    }
-
-    @Override
-    public String getDesc() {
-        return "Ask the 8-ball for an answer";
+    public CommandEightBall() {
+        super(CommandCategory.FUN, "8ball", "Ask the 8-ball for an answer", new String[]{"eightball"});
     }
 
     @Override

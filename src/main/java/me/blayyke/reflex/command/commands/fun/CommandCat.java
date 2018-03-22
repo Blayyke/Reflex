@@ -1,18 +1,11 @@
 package me.blayyke.reflex.command.commands.fun;
 
-import me.blayyke.reflex.command.CommandCategory;
 import me.blayyke.reflex.command.ImageCommand;
 import org.json.JSONObject;
 
 public class CommandCat extends ImageCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.FUN;
-    }
-
-    @Override
-    public String getName() {
-        return "cat";
+    public CommandCat() {
+        super("cat", "Get a random cat picture", new String[]{"kitty"});
     }
 
     @Override

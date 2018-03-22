@@ -9,7 +9,7 @@ import me.blayyke.reflex.database.keys.KeyCustomCommand;
 import me.blayyke.reflex.database.keys.guild.KeyCommands;
 import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldAction;
 import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldCreator;
-import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldDesc;
+import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldDescription;
 import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldType;
 import me.blayyke.reflex.utils.MiscUtils;
 import me.blayyke.reflex.utils.UserUtils;
@@ -44,7 +44,7 @@ public class CustomCommandManager {
         for (String name : stringSet) {
             if (name == null) throw new RuntimeException("Command name is null!");
 
-            String desc = reflex.getDBManager().hashGet(new CCFieldDesc(guild, name));
+            String desc = reflex.getDBManager().hashGet(new CCFieldDescription(guild, name));
             String action = reflex.getDBManager().hashGet(new CCFieldAction(guild, name));
             long creatorId = Long.parseLong(reflex.getDBManager().hashGet(new CCFieldCreator(guild, name)));
             String typeStr = reflex.getDBManager().hashGet(new CCFieldType(guild, name));
@@ -55,7 +55,7 @@ public class CustomCommandManager {
 
             CustomCommand command = new CustomCommand(reflex, guild, name);
             command.setReflex(reflex);
-            command.setDesc(desc);
+            command.setDescription(desc);
             command.setCreatorId(creatorId);
             command.setType(type);
             command.setAction(action);
@@ -99,7 +99,7 @@ public class CustomCommandManager {
             return;
         }
 
-        executeCommand(startTime, command, new CommandEnvironment(event.getMessage(), event.getMember(), reflex, event.getJDA(), event.getGuild(), commandName, args, prefixUsed));
+        executeCommand(startTime, command, new CommandEnvironment(event.getMessage(), reflex, commandName, args, prefixUsed));
     }
 
     private void executeCommand(long startTime, CustomCommand command, CommandEnvironment context) {

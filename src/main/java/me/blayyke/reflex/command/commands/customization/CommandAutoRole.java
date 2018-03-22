@@ -13,24 +13,8 @@ import net.dv8tion.jda.core.entities.Role;
 import java.util.List;
 
 public class CommandAutoRole extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.CUSTOMIZATION;
-    }
-
-    @Override
-    public Permission[] getBotRequiredPermissions() {
-        return new Permission[]{Permission.MANAGE_ROLES};
-    }
-
-    @Override
-    public String getName() {
-        return "autorole";
-    }
-
-    @Override
-    public String getDesc() {
-        return "Set or disable the role given to new members";
+    public CommandAutoRole() {
+        super(CommandCategory.CUSTOMIZATION, "autorole", "Set or disable the role given to new members", null, Permission.MANAGE_ROLES);
     }
 
     @Override

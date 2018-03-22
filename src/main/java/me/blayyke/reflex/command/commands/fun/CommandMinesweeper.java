@@ -12,24 +12,8 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 
 public class CommandMinesweeper extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.DEVELOPER;
-    }
-
-    @Override
-    public String getName() {
-        return "minesweeper";
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"ms"};
-    }
-
-    @Override
-    public String getDesc() {
-        return "Play a game of minesweeper";
+    public CommandMinesweeper() {
+        super(CommandCategory.FUN, "minesweeper", "Play a game of minesweeper", new String[]{"ms"});
     }
 
     @Override

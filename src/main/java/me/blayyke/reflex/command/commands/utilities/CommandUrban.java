@@ -14,24 +14,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 public class CommandUrban extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.UTILITIES;
-    }
-
-    @Override
-    public String getName() {
-        return "urban";
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"ud", "urbandict", "urbandictionary", "dictionary", "define"};
-    }
-
-    @Override
-    public String getDesc() {
-        return "Get the definition of something from UrbanDictionary.com";
+    public CommandUrban() {
+        super(CommandCategory.UTILITIES, "urban", "Get the definition of something from UrbanDictionary.com", new String[]{"ud", "define", "dictionary", "urbandictionary"});
     }
 
     @Override

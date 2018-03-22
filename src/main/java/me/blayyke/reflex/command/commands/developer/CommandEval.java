@@ -13,6 +13,7 @@ public class CommandEval extends AbstractCommand {
     private ScriptEngine engine;
 
     public CommandEval() {
+        super(CommandCategory.DEVELOPER, "evaluate", "Evaluate some JS code", new String[]{"eval", "js"});
         engine = new ScriptEngineManager().getEngineByName("nashorn");
         try {
             engine.eval("var imports = new JavaImporter(" +
@@ -30,24 +31,9 @@ public class CommandEval extends AbstractCommand {
         }
     }
 
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.DEVELOPER;
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"eval"};
-    }
-
-    @Override
-    public String getName() {
-        return "evaluate";
-    }
-
-    @Override
     public void onCommand(CommandEnvironment env) {
-        engine.put("context", env);
+        engine.put("environment", env);
+        engine.put("env", env);
 
         try {
             Object out = engine.eval(
@@ -61,10 +47,5 @@ public class CommandEval extends AbstractCommand {
             env.getChannel().sendMessage(createEmbed(Colours.ERROR).setTitle("Failure!").setDescription("Failed to onCommand code.").build()).queue();
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public String getDesc() {
-        return "Evaluates some javascript code (Nashorn)";
     }
 }

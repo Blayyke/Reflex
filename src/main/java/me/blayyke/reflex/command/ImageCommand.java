@@ -19,9 +19,12 @@ public abstract class ImageCommand extends AbstractCommand {
         void receive(String receive);
     }
 
-    @Override
-    public final String getDesc() {
-        return "Get a random image from " + getSiteUrl();
+    public ImageCommand(String name, String description, String[] aliases) {
+        this(CommandCategory.FUN, name, description, aliases);
+    }
+
+    public ImageCommand(CommandCategory category, String name, String description, String[] aliases) {
+        super(category, name, description, aliases);
     }
 
     @Override

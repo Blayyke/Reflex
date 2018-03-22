@@ -15,19 +15,8 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class CommandE621 extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.NSFW;
-    }
-
-    @Override
-    public String getName() {
-        return "e621";
-    }
-
-    @Override
-    public String getDesc() {
-        return "Send an image from e621.net with your specified tags.";
+    public CommandE621() {
+        super(CommandCategory.NSFW, "e621", "Send an NSFW image", new String[]{"furry"});
     }
 
     @Override

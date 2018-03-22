@@ -13,24 +13,8 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class CommandDadJoke extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.FUN;
-    }
-
-    @Override
-    public String getName() {
-        return "dadjoke";
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"dadjokes"};
-    }
-
-    @Override
-    public String getDesc() {
-        return "Show a random dad joke";
+    public CommandDadJoke() {
+        super(CommandCategory.FUN, "dadjoke", "Show a random dad joke", null);
     }
 
     @Override

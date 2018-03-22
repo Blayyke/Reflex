@@ -6,7 +6,7 @@ import me.blayyke.reflex.command.CommandCategory;
 import me.blayyke.reflex.command.CommandEnvironment;
 import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldAction;
 import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldCreator;
-import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldDesc;
+import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldDescription;
 import me.blayyke.reflex.database.keys.hash.ccmd.CCFieldType;
 import me.blayyke.reflex.utils.MiscUtils;
 import me.blayyke.reflex.utils.TextUtils;
@@ -31,17 +31,13 @@ public class CustomCommand extends AbstractCommand {
     private CustomCommandType type;
 
     public CustomCommand(Reflex reflex, Guild guild, String name) {
+        super(CommandCategory.CUSTOM, name, null, null);
         if (guild == null || name == null || name.isEmpty()) throw new IllegalArgumentException("invalid arguments");
         if (!TextUtils.isAllLetters(name))
             throw new IllegalArgumentException("name cannot contain non-alphabetic characters");
         this.guild = guild;
         this.name = name;
         this.setReflex(reflex);
-    }
-
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.CUSTOM;
     }
 
     @Override
@@ -76,11 +72,6 @@ public class CustomCommand extends AbstractCommand {
                 "\n})();\n";
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
-
     public void setAction(String action) {
         this.action = action;
         getReflex().getDBManager().hashSet(new CCFieldAction(getGuild(), getName()), action);
@@ -91,9 +82,9 @@ public class CustomCommand extends AbstractCommand {
         getReflex().getDBManager().hashSet(new CCFieldCreator(getGuild(), getName()), String.valueOf(creatorId));
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-        getReflex().getDBManager().hashSet(new CCFieldDesc(getGuild(), getName()), desc);
+    public void setDescription(String description) {
+        this.desc = description;
+        getReflex().getDBManager().hashSet(new CCFieldDescription(getGuild(), getName()), description);
     }
 
     public void setType(CustomCommandType type) {
@@ -107,11 +98,6 @@ public class CustomCommand extends AbstractCommand {
 
     public Member getCreator() {
         return guild.getMemberById(creatorId);
-    }
-
-    @Override
-    public String getDesc() {
-        return desc;
     }
 
     public Guild getGuild() {

@@ -7,14 +7,8 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 
 public class CommandBan extends PunishmentCommand {
-    @Override
-    public Permission[] getBotRequiredPermissions() {
-        return new Permission[]{Permission.BAN_MEMBERS};
-    }
-
-    @Override
-    public Permission[] getRequiredPermissions() {
-        return new Permission[]{Permission.BAN_MEMBERS};
+    public CommandBan() {
+        super("ban", Permission.BAN_MEMBERS);
     }
 
     @Override
@@ -25,16 +19,6 @@ public class CommandBan extends PunishmentCommand {
         embed.setDescription("Successfully banned " + UserUtils.formatUser(member.getUser()));
 
         return embed;
-    }
-
-    @Override
-    public String getName() {
-        return "ban";
-    }
-
-    @Override
-    public String getDesc() {
-        return "Ban a member from the server";
     }
 
     @Override

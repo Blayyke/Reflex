@@ -7,24 +7,8 @@ import me.blayyke.reflex.utils.MiscUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 
 public class CommandCoin extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.FUN;
-    }
-
-    @Override
-    public String getName() {
-        return "coin";
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"coinflip"};
-    }
-
-    @Override
-    public String getDesc() {
-        return "Flip a coin and show the side";
+    public CommandCoin() {
+        super(CommandCategory.FUN, "coin", "Flip a coin", new String[]{"coinflip", "cf"});
     }
 
     @Override

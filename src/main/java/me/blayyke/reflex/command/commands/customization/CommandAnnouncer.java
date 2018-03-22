@@ -12,19 +12,8 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import java.util.List;
 
 public class CommandAnnouncer extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.CUSTOMIZATION;
-    }
-
-    @Override
-    public String getName() {
-        return "announcer";
-    }
-
-    @Override
-    public String getDesc() {
-        return "a";
+    public CommandAnnouncer() {
+        super(CommandCategory.CUSTOMIZATION, "announcer", "Set the channel where user join/leave announcements are sent", null);
     }
 
     @Override

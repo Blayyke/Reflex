@@ -7,24 +7,8 @@ import me.blayyke.reflex.utils.MiscUtils;
 import me.blayyke.reflex.utils.TextUtils;
 
 public class CommandCursive extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.FUN;
-    }
-
-    @Override
-    public String getName() {
-        return "cursive";
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"fancy"};
-    }
-
-    @Override
-    public String getDesc() {
-        return "Turn your text into cursive";
+    private CommandCursive() {
+        super(CommandCategory.FUN, "cursive", "Turn your text cursive", new String[]{"fancytext"});
     }
 
     @Override

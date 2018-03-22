@@ -12,24 +12,8 @@ import net.dv8tion.jda.core.entities.Emote;
 import java.util.List;
 
 public class CommandEmote extends AbstractCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.FUN;
-    }
-
-    @Override
-    public String getName() {
-        return "emote";
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"emoji"};
-    }
-
-    @Override
-    public String getDesc() {
-        return "Sends the picture of an emote (NOT inbuilt discord emojis).";
+    public CommandEmote() {
+        super(CommandCategory.FUN, "emote", "Sends the picture of an emote", new String[]{"emoji"});
     }
 
     @Override

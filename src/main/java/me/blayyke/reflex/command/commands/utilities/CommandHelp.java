@@ -11,24 +11,8 @@ import net.dv8tion.jda.core.Permission;
 import java.util.Arrays;
 
 public class CommandHelp extends AbstractCommand {
-    @Override
-    public String getName() {
-        return "help";
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"about"};
-    }
-
-    @Override
-    public String getDesc() {
-        return "View help for commands and/or categories in this bot";
-    }
-
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.UTILITIES;
+    public CommandHelp() {
+        super(CommandCategory.UTILITIES, "help", "View help for the bot or commands", new String[]{"about", "info"});
     }
 
     @Override
@@ -81,7 +65,7 @@ public class CommandHelp extends AbstractCommand {
         if (cmd != null) {
             EmbedBuilder embed = createEmbed(Colours.INFO);
             embed.setTitle("Bot help");
-            embed.setDescription(env.getPrefixUsed() + "**" + cmd.getName() + "** - " + cmd.getDesc());
+            embed.setDescription(env.getPrefixUsed() + "**" + cmd.getName() + "** - " + cmd.getDescription());
 
             if (cmd.getRequiredPermissions().length > 0) {
                 StringBuilder builder = new StringBuilder();
@@ -107,7 +91,7 @@ public class CommandHelp extends AbstractCommand {
                     }
                     b.append(", ");
                 }
-                embed.addField("Aliases", aliases.substring(1, aliases.length() - 1), true);
+                embed.addField("Aliases", aliases.substring(0, aliases.length()), true);
             } else
                 embed.addField("Aliases", "No aliases.", true);
 

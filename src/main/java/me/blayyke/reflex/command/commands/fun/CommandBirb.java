@@ -1,22 +1,10 @@
 package me.blayyke.reflex.command.commands.fun;
 
-import me.blayyke.reflex.command.CommandCategory;
 import me.blayyke.reflex.command.ImageCommand;
 
 public class CommandBirb extends ImageCommand {
-    @Override
-    public CommandCategory getCategory() {
-        return CommandCategory.FUN;
-    }
-
-    @Override
-    public String getName() {
-        return "birb";
-    }
-
-    @Override
-    public String[] getAliases() {
-        return new String[]{"bird"};
+    public CommandBirb() {
+        super("birb", "Get a random bird image", new String[]{"bird"});
     }
 
     @Override
