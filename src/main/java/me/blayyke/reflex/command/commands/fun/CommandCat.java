@@ -22,7 +22,7 @@ public class CommandCat extends ImageCommand {
 
     @Override
     public String getSiteUrl() {
-        return "https://random.cat";
+        return "https://aws.random.cat";
     }
 
     @Override
